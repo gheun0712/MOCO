@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+  <h1>Movies</h1>
+  <div class="row">
+    {% for movie in movies %}
+    <div class="card my-3 mx-3" style="width: 18rem;">
+      <img src={{movie.poster_path}} class="card-img-top" alt="card" style="height: 24rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{ movie.title }}</h5>
+        {% if movie.title|length < 15 %}
+          <br>
+        {% endif %}
+        <p class="card-text">
+          장르 : {% for genre in movie.genres.all %}
+          {{genre.name}} {% endfor %} <br>
+          개봉일 : {{ movie.release_date|date:"Y-m-d" }} <br>
+          평점 : {{ movie.vote_average }}<br>
+          관객 : {{ movie.popularity }}명
+        </p>
+        <a href="{% url 'movies:detail' movie.pk %}" class="btn btn-primary">Detail</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock content %}

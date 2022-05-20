@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+    <img src="{{ movie.poster_path }}" alt="poster">
+    <h2><br><b>{{ movie.title }}</b></h2>
+    <p>{{ movie.overview }}</p>
+    <p>장르 : {% for genre in movie.genres.all %}
+      {{ genre.name }}
+      {% endfor %}</p>
+    <p>관객 수 : {{ movie.popularity }}</p>
+    <p>평점 : {{ movie.vote_average }}</p>
+    <p>개봉일 : {{ movie.release_date|date:"Y-m-d" }}</p>
+  </div>
+  <hr>
+
+  <div class="container">
+  <h3>한줄평</h3><hr>
+    {% if request.user.is_authenticated %}
+      <form action="{% url 'movies:create_comment' movie.pk %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.as_p}}
+        <input type="submit">
+      </form>
+      {% comment %} <form id="create">
+        <label for="rating">평점 : </label>
+        <input type="number" id="rating" name="rating" min="0" step="1" max="10"><br><br>
+        <label for="content">내용 : </label>
+        <input type="text" id="content" name="content">
+        <button>제출</button>
+      </form> {% endcomment %}
+    {% endif %}
+  </div>
+  <hr>
+
+  <div id="comment" class="container">
+    {% for comment in comments %}
+      <p>작성자 : {{comment.user}}, 평점 : {{comment.rating}}
+        {% if comment.user == request.user %}
+        <button id="delete" class="{{comment.pk}}">삭제</button>
+        {% endif %}
+      </p>
+      <p>{{comment.content}}</p><hr>
+    {% endfor %}
+  </div>
+{% endblock content %}
+
+{% block script %}
+  <script>
+    const movie_pk = {{ movie.pk }}
+    const delete_buttons = document.querySelectorAll('#delete')
+    delete_buttons.forEach(delete_button => {
+      delete_button.addEventListener('click', function(){
+        const comment_pk = delete_button.className
+
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+        axios.post(`http://127.0.0.1:8000/movies/${movie_pk}/comments/${comment_pk}/delete`)
+        .then(res =>
+        $('#comment').load(window.location.href+' #comment'))
+        .catch(err =>
+        console.log(err))
+      })
+    })
+  </script>
+{% endblock script %}

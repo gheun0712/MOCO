@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Community</h1>
+  <hr>
+  {% for review in reviews %}
+    <p>작성자 : <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></p>
+    <p>글 번호: {{ review.pk }}</p>
+    <p>글 제목: {{ review.title }}</p>
+    <p>글 내용: {{ review.content }}</p>
+    <form id="likeForm" action="{% url 'community:like' review.pk %}" method="POST" class="d-inline">
+      {% csrf_token %}
+      {% if user in review.like_users.all %}
+        <button>좋아요 취소</button>
+      {% else %}
+        <button>좋아요</button>
+      {% endif %}
+      <p>{{ review.like_users.all|length }} 명이 이 글을 좋아합니다.</p>
+    </form>
+    {% comment %} <p>{{ review.like_users.all|length }} 명이 이 글을 좋아합니다.</p> {% endcomment %}
+    <a href="{% url 'community:detail' review.pk %}">[detail]</a>
+    <hr>
+  {% endfor %}
+{% endblock %}
+
+{% block script %}
+  <script>
+    const likeforms = document.querySelectorAll('#likeForm')
+    likeforms.forEach(likeform => {
+      likeform.addEventListener('click', function(event){
+        event.preventDefault()
+        const likebtn = likeform.children[1]
+        const likep = likeform.children[2]
+
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+        axios.post(likeform.action)
+        .then(response => {
+          console.log('딸깍')
+          if (likebtn.innerText == '좋아요'){
+            likebtn.innerText = '좋아요 취소'
+          } else {
+            likebtn.innerText = '좋아요'
+          }
+          likep.innerText = `${response.data.count} 명이 이 글을 좋아합니다.`
+        }) 
+      })
+    })
+  </script>
+{% endblock script %}

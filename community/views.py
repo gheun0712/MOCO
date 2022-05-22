@@ -31,11 +31,17 @@ def create(request):
     return render(request, 'community/create.html', context)
 
 
+@require_POST
+def delete(request, review_pk):
+    review = Review.objects.get(pk=review_pk)
+    review.delete()
+    return redirect('community:index')
+
 @require_GET
 def detail(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
     comments = review.reviewcomment_set.all()
-    comment_form = CommentForm()
+    comment_form = ReviewCommentForm()
     context = {
         'review': review,
         'comment_form': comment_form,
@@ -47,7 +53,7 @@ def detail(request, review_pk):
 @require_POST
 def create_comment(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
-    comment_form = CommentForm(request.POST)
+    comment_form = ReviewCommentForm(request.POST)
     if comment_form.is_valid():
         comment = comment_form.save(commit=False)
         comment.review = review
@@ -60,6 +66,13 @@ def create_comment(request, review_pk):
         'comments': review.comment_set.all(),
     }
     return render(request, 'community/detail.html', context)
+
+
+@require_POST
+def delete_comment(require, review_pk, comment_pk):
+    comment = ReviewComment.objects.get(pk=comment_pk)
+    comment.delete()
+    return redirect('community:detail', review_pk)
 
 
 @require_POST

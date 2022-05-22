@@ -2,15 +2,32 @@
 
 {% block content %}
   <h2 class="text-center">DETAIL</h2>
-  <h3>{{ review.pk }} 번째 글</h3>
+  <h3>{{ review.title }}</h3>
   <hr>
-  <p>제목: {{ review.title }}</p>
+  <div style="display: inline;">작성자: <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user}}</a></div>
+  {% if request.user == review.user %}
+    <form action="{% url 'community:delete' review.pk %}" method="POST" style="display: inline">
+      {% csrf_token %}
+      <input type="submit" value="삭제">
+    </form>
+  {% endif %}
   <p>영화 제목: {{ review.movie_title }}</p>
   <p>내용: {{ review.content }}</p>
   <p>평점: {{ review.rank }}</p>
   <p>작성 시각: {{ review.created_at }}</p>
   <p>수정 시각: {{ review.updated_at }}</p>
+
+  <form id="likeForm" action="{% url 'community:like' review.pk %}" method="POST" class="d-inline">
+    {% csrf_token %}
+    {% if user in review.like_users.all %}
+      <button>추천 취소</button>
+    {% else %}
+      <button>추천</button>
+    {% endif %}
+    <p>{{ review.like_users.all|length }} 명이 이 글을 추천합니다.</p>
+  </form>
   <hr>
+
   <h4>댓글 목록</h4>
   {% if comments|length %}
     <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
@@ -18,11 +35,18 @@
   {% for comment in comments %}
     <div>
       {{ comment.user }} - {{ comment.content }}
+      {% if comment.user == request.user %}
+      <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" style="display: inline;">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+      </form>
+      {% endif %}
     </div>
   {% empty %}
     <p><b>댓글이 없어요..</b></p>
   {% endfor %}
   <hr>
+
   {% if request.user.is_authenticated %}
     <form action="{% url 'community:create_comment' review.pk %}" method="POST">
       {% csrf_token %}
@@ -34,3 +58,30 @@
   {% endif %}
   <a href="{% url 'community:index' %}">[back]</a>
 {% endblock  %}
+
+{% block script %}
+  <script>
+    const likeforms = document.querySelectorAll('#likeForm')
+    likeforms.forEach(likeform => {
+      likeform.addEventListener('click', function(event){
+        event.preventDefault()
+        const likebtn = likeform.children[1]
+        const likep = likeform.children[2]
+
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+        axios.post(likeform.action)
+        .then(response => {
+          console.log('딸깍')
+          if (likebtn.innerText == '추천'){
+            likebtn.innerText = '추천 취소'
+          } else {
+            likebtn.innerText = '추천'
+          }
+          likep.innerText = `${response.data.count} 명이 이 글을 좋아합니다.`
+        }) 
+      })
+    })
+  </script>
+{% endblock script %}

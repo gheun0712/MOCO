@@ -16,7 +16,15 @@
           {{genre.name}} {% endfor %} <br>
           개봉일 : {{ movie.release_date|date:"Y-m-d" }} <br>
           평점 : {{ movie.vote_average }}<br>
-          관객 : {{ movie.popularity }}명
+          관객 : {{ movie.popularity }}명 <br>
+          {% if user.is_authenticated %}
+            {% if request.user in movie.like_users.all %}
+              <a id="likeBtn" href="{% url 'movies:like' movie.pk %}"><i style="color:red;" class="fa fa-heart fa-2x"></i></a>
+            {% else %}
+              <a id="likeBtn" href="{% url 'movies:like' movie.pk %}"><i style="color:black;" class="fa fa-heart fa-2x"></i></a>
+            {% endif %}
+          {% endif %}
+          <p id="like{{movie.pk}}">{{ movie.like_users.all|length }}명이 이 영화를 좋아합니다.</p>
         </p>
         <a href="{% url 'movies:detail' movie.pk %}" class="btn btn-primary">Detail</a>
       </div>
@@ -24,3 +32,27 @@
     {% endfor %}
   </div>
 {% endblock content %}
+
+{% block script %}
+  <script>
+    likebtns = document.querySelectorAll('#likeBtn')
+
+    likebtns.forEach(likebtn => {
+      likebtn.addEventListener('click', function(event){
+        event.preventDefault()
+        
+        const movie_pk = likebtn.href.split('/')[4]
+        const likep = document.querySelector(`#like${movie_pk}`)
+        axios.get(likebtn.href)
+        .then(response => {
+          if (likebtn.children[0].style.color == 'red'){
+            likebtn.children[0].style.color = 'black'
+          } else {
+            likebtn.children[0].style.color = 'red'
+          }
+          likep.innerText = `${response.data.count} 명이 이 영화를 좋아합니다.`
+        })
+      })
+    })
+  </script>
+{% endblock script %}

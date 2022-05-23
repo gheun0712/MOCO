@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% load bootstrap5 %}
 {% block content %}
-  <h1>Movies</h1>
+  <h1>Movies </h1>
+  <input onkeypress="if(event.keyCode==13){searchinput();}" type="text" id="keyword" name="keyword">
+  <button id="search">검색</button>
+  <br>
+  <a href="{% url 'movies:recommend' %}">영화추천</a>
   <div class="row">
     {% for movie in movies %}
     <div class="card my-3 mx-3" style="width: 18rem;">
@@ -54,5 +58,22 @@
         })
       })
     })
+
+    const searchbtn = document.querySelector('#search')
+    searchbtn.addEventListener('click', function(){
+      if (keyword.value.length < 2){
+        alert('두 글자 이상 입력해주세요.')
+      } else {
+        window.location.href = `http://127.0.0.1:8000/movies/search/index/${keyword.value}`
+      }
+    })
+
+    function searchinput(){
+      if (keyword.value.length < 2){
+        alert('두 글자 이상 입력해주세요.')
+      } else {
+        window.location.href = `http://127.0.0.1:8000/movies/search/index/${keyword.value}`
+      }
+    }
   </script>
 {% endblock script %}

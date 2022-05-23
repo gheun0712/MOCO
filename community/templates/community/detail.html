@@ -29,22 +29,21 @@
   <hr>
 
   <h4>댓글 목록</h4>
-  {% if comments|length %}
-    <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
-  {% endif %}
-  {% for comment in comments %}
-    <div>
-      {{ comment.user }} - {{ comment.content }}
-      {% if comment.user == request.user %}
-      <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" style="display: inline;">
-        {% csrf_token %}
-        <input type="submit" value="삭제">
-      </form>
-      {% endif %}
-    </div>
-  {% empty %}
-    <p><b>댓글이 없어요..</b></p>
-  {% endfor %}
+  <div id="comment">
+    {% if comments|length %}
+      <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
+    {% endif %}
+    {% for comment in comments %}
+      <div>
+        {{ comment.user }} - {{ comment.content }}
+        {% if comment.user == request.user %}
+        <button id="delete" class="{{comment.pk}}">삭제</button>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p><b>댓글이 없어요..</b></p>
+    {% endfor %}
+  </div>
   <hr>
 
   {% if request.user.is_authenticated %}
@@ -81,6 +80,23 @@
           }
           likep.innerText = `${response.data.count} 명이 이 글을 좋아합니다.`
         }) 
+      })
+    })
+
+    const review_pk = {{ review.pk }}
+    const delete_buttons = document.querySelectorAll('#delete')
+    delete_buttons.forEach(delete_button => {
+      delete_button.addEventListener('click', function(){
+        const comment_pk = delete_button.className
+
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+        axios.post(`http://127.0.0.1:8000/community/${review_pk}/comments/${comment_pk}/delete`)
+        .then(res =>
+        $('#comment').load(window.location.href+' #comment'))
+        .catch(err =>
+        console.log(err))
       })
     })
   </script>

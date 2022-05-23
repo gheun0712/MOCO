@@ -4,6 +4,10 @@ from .models import Movie, MovieComment
 from .forms import MovieCommentForm
 from django.http import JsonResponse
 from django.contrib import messages
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import MovieSerialzier
+import requests
 # Create your views here.
 @require_safe
 def index(request):
@@ -30,6 +34,7 @@ def detail(request, movie_pk):
 @require_POST
 def create_comment(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
+
     comments = MovieComment.objects.filter(movie_id=movie.pk)
     user_list = []
     for comment in comments:
@@ -65,3 +70,59 @@ def like(request, movie_pk):
         movie.like_users.add(user)
     count = movie.like_users.count()
     return JsonResponse({'count':count})
+
+
+def recommend(request):
+    return render(request, 'movies/recommend.html')
+
+
+@api_view(['GET'])
+def recommended_vote(request):
+    movies = Movie.objects.order_by('-vote_average')[:10]
+    serializer = MovieSerialzier(movies, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def recommended_popularity(request):
+    movies = Movie.objects.order_by('-popularity')[:10]
+    serializer = MovieSerialzier(movies, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def recommended_releasedate(request):
+    movies = Movie.objects.order_by('-release_date')[:10]
+    serializer = MovieSerialzier(movies, many=True)
+    return Response(serializer.data)
+
+
+def search(request, keyword):
+    URL_Base ='https://api.themoviedb.org/3'
+    path = '/search/movie'
+    params = {
+            'api_key' : 'a5bef88bf2657963202297703c0dd532',
+            'query' : keyword,
+            'language' : 'ko-KR',
+            'region' : 'KR',
+        }
+    responses = requests.get(URL_Base+path, params=params).json()
+    context = {
+        'responses': responses,
+        'keyword' : keyword,
+    }
+    return render(request, 'movies/search.html', context)
+
+
+def search_detail(request, movie_id):
+    URL_Base ='https://api.themoviedb.org/3'
+    path = '/movie/' + str(movie_id)
+    params = {
+        'api_key' : 'a5bef88bf2657963202297703c0dd532',
+        'language' : 'ko-KR',
+    }
+    response = requests.get(URL_Base+path, params=params).json()
+    context = {
+        'response' : response
+    }
+    return render(request, 'movies/search_detail.html', context)

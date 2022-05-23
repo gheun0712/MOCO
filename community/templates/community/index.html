@@ -4,7 +4,7 @@
   <h1>Community</h1>
   <hr>
   {% for review in reviews %}
-    <h4><a href="{% url 'community:detail' review.pk %}">{{review.title}}</a></h4>
+    <h4><a style="text-decoration:none;" href="{% url 'community:detail' review.pk %}">{{review.title}} ({{review.reviewcomment_set.all|length}})</a></h4>
     <p>작성자 : <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></p>
     <p>{{ review.like_users.all|length }} 명이 이 글을 추천합니다.</p>
     <hr>

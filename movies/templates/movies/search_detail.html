@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{response.title}}의 상세정보</h1>
+  <div class="container">
+    <img src='https://www.themoviedb.org/t/p/w600_and_h900_bestv2{{response.poster_path}}' alt="poster">
+    <h2><br><b>{{ response.title }}</b></h2>
+    <p>{{ response.overview }}</p>
+    <p>장르 : {% for genre in response.genres %}
+      {{ genre.name }}
+      {% endfor %}</p>
+    <p>관객 수 : {{ response.popularity }}명</p>
+    <p>평점 : {{ response.vote_average }} / 10</p>
+    <p>개봉일 : {{ response.release_date }}</p>
+  </div>
+{% endblock content %}

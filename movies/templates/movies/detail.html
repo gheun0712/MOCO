@@ -22,24 +22,17 @@
       {% endfor %}
     {% else %}
       {% if request.user.is_authenticated %}
-        <form action="{% url 'movies:create_comment' movie.pk %}" method="POST">
+        <form id="create_comment" action="{% url 'movies:create_comment' movie.pk %}" method="POST">
           {% csrf_token %}
           {{ comment_form.as_p}}
           <input type="submit">
         </form>
-    {% endif %}
-      {% comment %} <form id="create">
-        <label for="rating">평점 : </label>
-        <input type="number" id="rating" name="rating" min="0" step="1" max="10"><br><br>
-        <label for="content">내용 : </label>
-        <input type="text" id="content" name="content">
-        <button>제출</button>
-      </form> {% endcomment %}
+      {% endif %}
     {% endif %}
   </div>
   <hr>
 
-  <div id="comment" class="container">
+  <div id="comment">
     {% for comment in comments %}
       <p>작성자 : {{comment.user}}, 평점 : {{comment.rating}}
         {% if comment.user == request.user %}
@@ -69,5 +62,6 @@
         console.log(err))
       })
     })
+
   </script>
 {% endblock script %}

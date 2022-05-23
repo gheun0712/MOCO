@@ -1,5 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>{{ person.username }}의 프로필 페이지</h1>
+  <h1>{{ person.username }}의 프로필 페이지</h1><hr>
+
+  <h3>좋아요 한 영화</h3>
+  {% for movie in movies %}
+    <p><a href="{% url 'movies:detail' movie.pk %}">{{movie.title}}</a></p>
+  {% endfor %}<hr>
+
+  <h3>커뮤니티에 작성한 글</h3>
+  {% for review in reviews %}
+    <p><a href="{% url 'community:detail' review.pk %}">{{review.title}}</a></p>
+  {% endfor %}<hr>
+
+  <h3>커뮤니티에 작성한 댓글</h3>
+  {% for comment in comments %}
+    <p>{{comment.content}} - <a href="{% url 'community:detail' comment.review.pk %}">{{comment.review.title}}</a></p>
+  {% endfor %}
 {% endblock %}

@@ -6,6 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_http_methods
 from .forms import CustomUserCreationForm
+from movies.models import Movie
+from community.models import Review, ReviewComment
 
 @require_http_methods(['GET', 'POST'])
 def signup(request):
@@ -53,8 +55,13 @@ def logout(request):
 @login_required
 def profile(request, username):
     person = get_object_or_404(get_user_model(), username=username)
+    movies = Movie.objects.filter(like_users=person.pk)
+    reviews = Review.objects.filter(user=person.pk)
+    comments = ReviewComment.objects.filter(user=person.pk)
     context = {
-        
+        'comments' : comments,
+        'reviews' : reviews,
+        'movies' : movies,
         'person': person,
     }
     return render(request, 'accounts/profile.html', context)

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+  <h1 id="title">영화추천</h1>
+  <input id="averageBtn" type="submit" value="평점순">
+  <input id="popularityBtn" type="submit" value="관람객 순">
+  <input id="releasedateBtn"type="submit" value="개봉일 순">
+  <hr>
+  <div id="movieList">
+  </div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  const title = document.querySelector('#title')
+  const averageBtn = document.querySelector('#averageBtn')
+  const popularityBtn = document.querySelector('#popularityBtn')
+  const releasedateBtn = document.querySelector('#releasedateBtn')
+
+  averageBtn.addEventListener('click', function(event){
+    event.preventDefault()
+    title.innerText = "평점 순"
+    const movieList = document.querySelector('#movieList')
+    while (movieList.hasChildNodes()) {
+      movieList.removeChild( movieList.firstChild)
+    }
+
+    axios({
+      method: 'get',
+      url: '/movies/recommended/vote/'
+    })
+    .then(res => {
+      const movies = res.data
+      movies.forEach(movie => {
+        const movieDiv = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.innerText = movie.title
+
+        const img = document.createElement('img')
+        img.src = movie.poster_path
+
+        const p_overview = document.createElement('p')
+        p_overview.innerText = movie.overview
+
+        const p_vote = document.createElement('p')
+        p_vote.innerText = `평점 : ${movie.vote_average}`
+
+        const a = document.createElement('a')
+        a.innerText = '[DETAIL]'
+        a.href = `/movies/${movie.id}/`
+
+        const hr = document.createElement('hr')
+
+        movieDiv.append(h2, img, p_overview, p_vote, a, hr)
+        movieList.appendChild(movieDiv)
+      })
+    })
+  })
+
+  popularityBtn.addEventListener('click', function(event){
+    event.preventDefault()
+    title.innerText = "관람객 순"
+    const movieList = document.querySelector('#movieList')
+    while (movieList.hasChildNodes()) {
+      movieList.removeChild( movieList.firstChild)
+    }
+
+    axios({
+      method: 'get',
+      url: '/movies/recommended/popularity/'
+    })
+    .then(res => {
+      const movies = res.data
+      movies.forEach(movie => {
+        const movieDiv = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.innerText = movie.title
+
+        const img = document.createElement('img')
+        img.src = movie.poster_path
+
+        const p_overview = document.createElement('p')
+        p_overview.innerText = movie.overview
+
+        const p_popularity = document.createElement('p')
+        p_popularity.innerText = `관람객 : ${movie.popularity}`
+
+        const a = document.createElement('a')
+        a.innerText = '[DETAIL]'
+        a.href = `/movies/${movie.id}/`
+
+        const hr = document.createElement('hr')
+
+        movieDiv.append(h2, img, p_overview, p_popularity, a, hr)
+        movieList.appendChild(movieDiv)
+      })
+    })
+  })
+
+  releasedateBtn.addEventListener('click', function(event){
+    event.preventDefault()
+    title.innerText = "개봉일 순"
+    const movieList = document.querySelector('#movieList')
+    while (movieList.hasChildNodes()) {
+      movieList.removeChild( movieList.firstChild)
+    }
+
+    axios({
+      method: 'get',
+      url: '/movies/recommended/releasedate/'
+    })
+    .then(res => {
+      const movies = res.data
+      movies.forEach(movie => {
+        const movieDiv = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.innerText = movie.title
+
+        const img = document.createElement('img')
+        img.src = movie.poster_path
+
+        const p_overview = document.createElement('p')
+        p_overview.innerText = movie.overview
+
+        const p_release_date = document.createElement('p')
+        p_release_date.innerText = `개봉일 : ${movie.release_date}`
+
+        const a = document.createElement('a')
+        a.innerText = '[DETAIL]'
+        a.href = `/movies/${movie.id}/`
+
+        const hr = document.createElement('hr')
+
+        movieDiv.append(h2, img, p_overview, p_release_date, a, hr)
+        movieList.appendChild(movieDiv)
+      })
+    })
+  })
+</script>
+{% endblock script %}

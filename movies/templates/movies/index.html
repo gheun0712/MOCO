@@ -3,14 +3,25 @@
 {% block content %}
 
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300&display=swap');
+  #cardtitle {
+    font-family: 'Black Han Sans', sans-serif;
+  }
+
+  #cardbody {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
   input {
     color: #666;
     z-index: 2;
     border: 0 none;
   }
+
   input:focus {
     outline: 0 none;
   }
+
   input:focus + button {
     -webkit-transform: translate(0, 0);
         -ms-transform: translate(0, 0);
@@ -18,6 +29,7 @@
     -webkit-transition-duration: 0.3s;
             transition-duration: 0.3s;
   }
+
   input:focus + button .fa {
     -webkit-transform: translate(0px, 0);
         -ms-transform: translate(0px, 0);
@@ -54,6 +66,54 @@
     -webkit-transition: all 0.1s ease-in-out;
             transition: all 0.1s ease-in-out;
   }
+
+  * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.buttons {
+    margin: 5%;
+    text-align: center;
+}
+
+.btn-hover {
+    width: 300px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    margin: 20px;
+    height: 55px;
+    text-align:center;
+    border: none;
+    background-size: 300% 100%;
+
+    border-radius: 100px;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.btn-hover:hover {
+    background-position: 200% 0;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.btn-hover:focus {
+    outline: none;
+}
+
+.btn-hover.color-1 {
+    background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+    box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+}
+
 </style>
 
   {% comment %} <h1 class="text-center">Movies </h1> {% endcomment %}
@@ -82,8 +142,18 @@
     {% for movie in movies %}
     <div class="card my-3 mx-3" style="width: 18rem;">
       <img src={{movie.poster_path}} class="card-img-top" alt="card" style="height: 24rem;">
-      <div class="card-body">
-        <h5 class="card-title">{{ movie.title }}</h5>
+      
+      <div class="card-body" id="cardbody">
+        <div align="right">
+          {% if user.is_authenticated %}
+          {% if request.user in movie.like_users.all %}
+            <a id="likeBtn" href="{% url 'movies:like' movie.pk %}"><i style="color:red;" class="fa fa-heart fa-2x"></i></a>
+          {% else %}
+            <a id="likeBtn" href="{% url 'movies:like' movie.pk %}"><i style="color:black;" class="fa fa-heart fa-2x"></i></a>
+          {% endif %}
+        </div>
+        <br>
+        <h5 class="card-title" id="cardtitle" style="background: linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ movie.title }}</h5>
         {% if movie.title|length < 15 %}
           <br>
         {% endif %}
@@ -93,16 +163,12 @@
           개봉일 : {{ movie.release_date|date:"Y-m-d" }} <br>
           평점 : {{ movie.vote_average }}<br>
           관객 : {{ movie.popularity }}명 <br>
-          {% if user.is_authenticated %}
-            {% if request.user in movie.like_users.all %}
-              <a id="likeBtn" href="{% url 'movies:like' movie.pk %}"><i style="color:red;" class="fa fa-heart fa-2x"></i></a>
-            {% else %}
-              <a id="likeBtn" href="{% url 'movies:like' movie.pk %}"><i style="color:black;" class="fa fa-heart fa-2x"></i></a>
-            {% endif %}
-          {% endif %}
-          <p id="like{{movie.pk}}">{{ movie.like_users.all|length }}명이 이 영화를 좋아합니다.</p>
+          <p  class="fw-bold" id="like{{movie.pk}}">{{ movie.like_users.all|length }}명이 이 영화를 좋아합니다.</p>
         </p>
-        <a href="{% url 'movies:detail' movie.pk %}" class="btn btn-primary">Detail</a>
+        <div class="buttons justify-content-between">
+          <a href="{% url 'movies:detail' movie.pk %}" class="btn-hover color-1">Detail</a>
+        </div>
+      {% endif %}
       </div>
     </div>
     {% endfor %}

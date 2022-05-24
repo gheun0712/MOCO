@@ -1,45 +1,97 @@
 {% extends 'base.html' %}
-
 {% block content %}
-    <div class="container">
-    <img src="{{ movie.poster_path }}" alt="poster">
-    <h2><br><b>{{ movie.title }}</b></h2>
-    <p>{{ movie.overview }}</p>
-    <p>장르 : {% for genre in movie.genres.all %}
-      {{ genre.name }}
-      {% endfor %}</p>
-    <p>관객 수 : {{ movie.popularity }}명</p>
-    <p>평점 : {{ movie.vote_average }} / 10</p>
-    <p>개봉일 : {{ movie.release_date|date:"Y년-m월-d일" }}</p>
-  </div>
-  <hr>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;800&display=swap');
+
+  #cardtitle {
+    font-family: 'Black Han Sans', sans-serif;
+  }
+
+  #cardbody {
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 20px;
+  }
+
+  #cardinfo {
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 20px;
+  }
+
+  #commenttitle{
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+  }
+
+  #commentinfo{
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 18px;
+  }
+
+  #commnetbody{
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 25px;
+  }
+</style>
 
   <div class="container">
-  <h3>한줄평</h3><hr>
+    <div class="card mt-5 mb-3" >
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img src="{{ movie.poster_path }}" class="img-fluid rounded-start" alt="poster">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h1 id="cardtitle" class="card-title fw-bold" 
+            style="background: linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            {{ movie.title }}</h1>
+            <br>
+            <br>
+            <p class="card-text" id="cardbody" >{{ movie.overview }}</p>
+            <br>
+            <br>
+            <p class="card-text fw-bold">✔ 장르 : {% for genre in movie.genres.all %}
+              {{ genre.name }}
+              {% endfor %}</p>
+            <p class="card-text fw-bold">✔ 관객 수 : {{ movie.popularity }}명</p>
+            <p class="card-text fw-bold">✔ 평점 : {{ movie.vote_average }} / 10</p>
+            <p class="card-text fw-bold">✔ 개봉일 : {{ movie.release_date|date:"Y년-m월-d일" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <div class="container mt-5">
+    <p id="commenttitle" style="border-left: 10px solid #AD9AEE; padding: 0.5em; border-bottom: 2px solid #AD9AEE; ">한줄평</p>
     {% if messages %}
       {% for message in messages %}
         {{ message }}
       {% endfor %}
     {% else %}
       {% if request.user.is_authenticated %}
+        <div class="container">
         <form id="create_comment" action="{% url 'movies:create_comment' movie.pk %}" method="POST">
           {% csrf_token %}
           {{ comment_form.as_p}}
-          <input type="submit">
+          <input class="btn btn-outline-success" type="submit">
         </form>
+        </div>
       {% endif %}
     {% endif %}
   </div>
+  <br>
   <hr>
-
   <div id="comment">
     {% for comment in comments %}
-      <p>작성자 : {{comment.user}}, 평점 : {{comment.rating}}
+      <p id="commentinfo">😀작성자 : {{comment.user}}　　⭐평점 : {{comment.rating}}
         {% if comment.user == request.user %}
-        <button id="delete" class="{{comment.pk}}">삭제</button>
+        <button id="delete" class="{{comment.pk}} mx-5 btn btn-outline-info">삭제</button>
         {% endif %}
       </p>
-      <p>{{comment.content}}</p><hr>
+      <p id="commnetbody" class="fw-bold">{{comment.content}}</p><hr class="mb-3">
     {% endfor %}
   </div>
 {% endblock content %}

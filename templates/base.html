@@ -30,13 +30,13 @@
             <a href="{% url 'movies:index' %}" class="nav-link link-dark px-2 active" aria-current="page">MOVIE</a>
           </li>
           <li class="nav-item">
+            <a href="{% url 'movies:recommend' %}" class="nav-link link-dark px-2">RECOMMEND</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'community:index'%}" class="nav-link link-dark px-2">COMMUNITY</a>
           </li>
           <li class="nav-item">
             <a href="{% url 'community:create'%}" class="nav-link link-dark px-2">NEW REVIEW</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'movies:recommend' %}" class="nav-link link-dark px-2">RECOMMEND</a>
           </li>
         </ul>
         
@@ -47,7 +47,9 @@
                 {% csrf_token %}
                 <input type="submit" value="Logout" class="btn btn-outline-danger mx-2">
               </form>
-                {% comment %} <a href="{% url 'accounts:profile' %}" class="btn btn-outline-warning">Profile</a> {% endcomment %}
+              {% comment %} <li class="nav-item">
+                <a href="{% url 'accounts:profile' %}" class="btn btn-outline-warning">SIGN UP</a>
+              </li> {% endcomment %}
 
             {% else %}
               <a href="{% url 'accounts:login' %}" class="btn btn-outline-success mx-2">LOGIN</a>

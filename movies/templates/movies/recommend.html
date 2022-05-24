@@ -2,11 +2,89 @@
 {% load bootstrap5 %}
 
 {% block content %}
-  <h1 id="title">영화추천</h1>
-  <input id="averageBtn" type="submit" value="평점순">
-  <input id="popularityBtn" type="submit" value="관람객 순">
-  <input id="releasedateBtn"type="submit" value="개봉일 순">
-  <hr>
+<style> 
+  .spot {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .svg-wrapper {
+    margin-top: 0;
+    position: relative;
+    width: 150px;
+    /*make sure to use same height/width as in the html*/
+    height: 40px;
+    display: inline-block;
+    border-radius: 3px;
+    margin-left: 5px;
+    margin-right: 5px
+  }
+
+  #shape {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: #009FFD;
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -220;
+    transition: 1s all ease;
+  }
+
+  #text {
+    margin-top: -35px;
+    text-align: center;
+  }
+  
+  #text a {
+    color: Black;
+    text-decoration: none;
+    font-weight: 100;
+    font-size: 1.1em;
+  }
+
+  .svg-wrapper:hover #shape {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: #06D6A0;
+  }
+</style>
+
+  {% comment %} <h1 id="title">영화추천</h1> {% endcomment %}
+  <br>
+  <div class="buttons" align="center">
+      <div class="svg-wrapper">
+        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+          <rect id="shape" height="40" width="150" />
+          <div id="text">
+            <input id="averageBtn" type="submit" class="btn" value="평점순">
+          </div>
+        </svg>
+      </div>
+
+      <div class="svg-wrapper">
+        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+          <rect id="shape" height="40" width="150" />
+          <div id="text">
+            <input id="popularityBtn" type="submit" class="btn" value="관람객 순">
+          </div>
+        </svg>
+      </div>
+
+      <div class="svg-wrapper">
+        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+          <rect id="shape" height="40" width="150" />
+          <div id="text">
+            <input id="releasedateBtn"type="submit" class="btn" value="개봉일 순">
+          </div>
+        </svg>
+      </div>
+  </div>
+
+  <hr class="mt-5">
+
   <div id="movieList">
   </div>
 {% endblock content %}

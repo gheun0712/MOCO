@@ -98,7 +98,6 @@
 
   averageBtn.addEventListener('click', function(event){
     event.preventDefault()
-    title.innerText = "평점 순"
     const movieList = document.querySelector('#movieList')
     while (movieList.hasChildNodes()) {
       movieList.removeChild( movieList.firstChild)
@@ -139,7 +138,6 @@
 
   popularityBtn.addEventListener('click', function(event){
     event.preventDefault()
-    title.innerText = "관람객 순"
     const movieList = document.querySelector('#movieList')
     while (movieList.hasChildNodes()) {
       movieList.removeChild( movieList.firstChild)
@@ -180,7 +178,6 @@
 
   releasedateBtn.addEventListener('click', function(event){
     event.preventDefault()
-    title.innerText = "개봉일 순"
     const movieList = document.querySelector('#movieList')
     while (movieList.hasChildNodes()) {
       movieList.removeChild( movieList.firstChild)

@@ -151,6 +151,7 @@
           {% else %}
             <a id="likeBtn" href="{% url 'movies:like' movie.pk %}"><i style="color:black;" class="fa fa-heart fa-2x"></i></a>
           {% endif %}
+          {% endif %}
         </div>
         <br>
         <h5 class="card-title" id="cardtitle" style="background: linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ movie.title }}</h5>
@@ -168,7 +169,6 @@
         <div class="buttons justify-content-between">
           <a href="{% url 'movies:detail' movie.pk %}" class="btn-hover color-1">Detail</a>
         </div>
-      {% endif %}
       </div>
     </div>
     {% endfor %}

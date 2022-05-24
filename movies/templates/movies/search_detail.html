@@ -1,16 +1,50 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>{{response.title}}의 상세정보</h1>
-  <div class="container">
-    <img src='https://www.themoviedb.org/t/p/w600_and_h900_bestv2{{response.poster_path}}' alt="poster">
-    <h2><br><b>{{ response.title }}</b></h2>
-    <p>{{ response.overview }}</p>
-    <p>장르 : {% for genre in response.genres %}
-      {{ genre.name }}
-      {% endfor %}</p>
-    <p>관객 수 : {{ response.popularity }}명</p>
-    <p>평점 : {{ response.vote_average }} / 10</p>
-    <p>개봉일 : {{ response.release_date }}</p>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;800&display=swap');
+
+  #cardtitle {
+    font-family: 'Black Han Sans', sans-serif;
+  }
+
+  #cardbody {
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 20px;
+  }
+
+  #cardinfo {
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 20px;
+  }
+</style>
+
+<div class="container">
+  <div class="card mt-5 mb-3" >
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src='https://www.themoviedb.org/t/p/w600_and_h900_bestv2{{response.poster_path}}' class="img-fluid rounded-start" alt="poster">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h1 id="cardtitle" class="card-title fw-bold" 
+          style="background: linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          {{response.title}}</h1>
+          <br>
+          <br>
+          <p class="card-text" id="cardbody" >{{ response.overview }}</p>
+          <br>
+          <br>
+          <p class="card-text fw-bold">✔ 장르 : {% for genre in response.genres %}
+            {{ genre.name }}
+            {% endfor %}</p>
+          <p class="card-text fw-bold">✔ 관객 수 : {{ response.popularity }}명</p>
+          <p class="card-text fw-bold">✔ 평점 : {{ response.vote_average  }} / 10</p>
+          <p class="card-text fw-bold">✔ 개봉일 : {{ response.release_date }}</p>
+        </div>
+      </div>
+    </div>
   </div>
+
 {% endblock content %}

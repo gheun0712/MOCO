@@ -1,41 +1,84 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2 class="text-center">DETAIL</h2>
-  <h3>{{ review.title }}</h3>
-  <hr>
-  <div style="display: inline;">작성자: <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user}}</a></div>
-  {% if request.user == review.user %}
-    <form action="{% url 'community:delete' review.pk %}" method="POST" style="display: inline">
-      {% csrf_token %}
-      <input type="submit" value="삭제">
-    </form>
-  {% endif %}
-  <p>영화 제목: {{ review.movie_title }}</p>
-  <p>내용: {{ review.content }}</p>
-  <p>평점: {{ review.rank }}</p>
-  <p>작성 시각: {{ review.created_at }}</p>
-  <p>수정 시각: {{ review.updated_at }}</p>
 
-  <form id="likeForm" action="{% url 'community:like' review.pk %}" method="POST" class="d-inline">
-    {% csrf_token %}
-    {% if user in review.like_users.all %}
-      <button>추천 취소</button>
-    {% else %}
-      <button>추천</button>
+<style>
+
+  @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gothic+A1&family=Poor+Story&display=swap');
+
+  #title {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 50px;
+  }
+
+  #content {
+    font-family: 'Poor Story', cursive;
+    font-size: 25px;
+  }
+
+  #info {
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 20px;
+  
+  input {
+    width: 500px;
+    height: 32px;
+    font-size: 15px;
+    border: 0;
+    border-radius: 15px;
+    outline: none;
+    padding-left: 10px;
+    background-color: rgb(233, 233, 233);
+  }
+
+  }
+
+
+</style>
+  <h3 id="title" class="mt-5 fw-bold text-center" style="text-decoration:none; color:white; border-radius: 5em; padding: 0.5em; background: #FFBEBE">{{ review.title }}</h3>
+  <br>
+  <div style="border: 3px dashed #C6C6C6; padding: 0.6em;">
+    <br>
+    {% if request.user == review.user %}
+      <form action="{% url 'community:delete' review.pk %}" method="POST" style="display: inline">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+      </form>
     {% endif %}
-    <p>{{ review.like_users.all|length }} 명이 이 글을 추천합니다.</p>
-  </form>
+
+    <p id="info" class="fw-bold">📽 영화 제목: {{ review.movie_title }}</p>
+    <p id="info">⭐ 평점: {{ review.rank }}</p>
+    <p id="content" >🔗 내용: {{ review.content }}</p>
+    <div id="info" style="display: inline;">😎 작성자: <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user}}</a></div>
+    <br>
+    <br>
+    <p id="info" style="font-size:15px;">작성 시각: {{ review.created_at }}</p>
+    <p id="info" style="font-size:15px;">수정 시각: {{ review.updated_at }}</p>
+
+    <form id="likeForm" action="{% url 'community:like' review.pk %}" method="POST" class="d-inline">
+      {% csrf_token %}
+      {% if user in review.like_users.all %}
+        <button style="color:red;" class="btn fa fa-heart">　추천 취소</button>
+      {% else %}
+        <button style="color:black;" class="btn fa fa-heart">　추천</button>
+      {% endif %}
+      <br>
+      <br>
+      <p>{{ review.like_users.all|length }} 명이 이 글을 추천합니다.</p>
+    </form>
+  </div>
+  <br>
+
+  <hr>
   <hr>
 
-  <h4>댓글 목록</h4>
   <div id="comment">
     {% if comments|length %}
-      <p><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
+      <p style="font-size: 20px;"><b>{{ comments|length }}개의 댓글이 있습니다.</b></p>
     {% endif %}
     {% for comment in comments %}
-      <div>
-        {{ comment.user }} - {{ comment.content }}
+      <div id="info" style="font-size:15px;">
+        🥨　{{ comment.user }} - {{ comment.content }}
         {% if comment.user == request.user %}
         <button id="delete" class="{{comment.pk}}">삭제</button>
         {% endif %}
@@ -45,6 +88,8 @@
     {% endfor %}
   </div>
   <hr>
+  <hr class="mt-4">
+  <br>
 
   {% if request.user.is_authenticated %}
     <form action="{% url 'community:create_comment' review.pk %}" method="POST">

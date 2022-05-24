@@ -1,17 +1,156 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<input onkeypress="if(event.keyCode==13){searchinput();}" type="text" id="keyword" name="keyword">
-<button id="search">검색</button>
-<h1>{{ keyword }} 검색결과</h1>
-<div class="container row">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gugi&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300&display=swap');
+
+  #title {
+    font-family: 'Gugi', cursive;
+  }
+
+  #cardtitle {
+    font-family: 'Black Han Sans', sans-serif;
+  }
+
+  #cardbody {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
+  input {
+    color: #666;
+    z-index: 2;
+    border: 0 none;
+  }
+
+  input:focus {
+    outline: 0 none;
+  }
+
+  input:focus + button {
+    -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+            transform: translate(0, 0);
+    -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+  }
+
+  input:focus + button .fa {
+    -webkit-transform: translate(0px, 0);
+        -ms-transform: translate(0px, 0);
+            transform: translate(0px, 0);
+    -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+    color: #fff;
+  }
+  
+  button {
+    z-index: 1;
+    width: 50px;
+    border: 0 none;
+    background: #ceb980;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;  
+    -webkit-transform: translate(-50px, 0);
+        -ms-transform: translate(-50px, 0);
+            transform: translate(-50px, 0);
+    -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+  }
+  
+  .fa-search {
+    font-size: 1.4rem;
+    color: #29abe2;
+    z-index: 3;
+    top: 25%;
+    -webkit-transform: translate(-190px, 0);
+        -ms-transform: translate(-190px, 0);
+            transform: translate(-190px, 0);
+    -webkit-transition-duration: 0.3s;
+            transition-duration: 0.3s;
+    -webkit-transition: all 0.1s ease-in-out;
+            transition: all 0.1s ease-in-out;
+  }
+
+  * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+  .buttons {
+    margin: 5%;
+    text-align: center;
+  }
+
+  .btn-hover {
+    width: 300px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    margin: 20px;
+    height: 55px;
+    text-align:center;
+    border: none;
+    background-size: 300% 100%;
+
+    border-radius: 100px;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+  }
+
+  .btn-hover:hover {
+    background-position: 200% 0;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+  }
+
+  .btn-hover:focus {
+    outline: none;
+  }
+
+  .btn-hover.color-1 {
+    background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+    box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+  }
+</style>
+
+
+<div class="d-flex justify-content-end">
+  <input onkeypress="if(event.keyCode==13){searchinput();}" type="text" id="keyword" name="keyword" placeholder="영화검색"
+  style="
+  position: relative;
+  width: 200px;
+  height: 50px;
+  padding: 0;
+  display: inline-block;
+  float: left;
+">
+  <button id="search" class="text-white fw-bold"  style="
+  position: relative;
+  height: 50px;
+  padding: 0;
+  display: inline-block;
+  float: left;
+">검색</button> 
+</div>
+
+<h1 id="title">"{{ keyword }}" 검색 결과</h1>
+<br>
+
+<div class="row" align="center">
   {% for response in responses.results %}
   <div class="card mx-3 my-3" style="width: 18rem;">
-    <img src='https://www.themoviedb.org/t/p/w600_and_h900_bestv2{{response.poster_path}}' class="card-img-top" alt="...">
+    <img src='https://www.themoviedb.org/t/p/w600_and_h900_bestv2{{response.poster_path}}' class="card-img-top" alt="POSTER NONE">
     <div class="card-body">
-      <h5 class="card-title">{{response.title}}</h5>
-      <p class="card-text">평점 : {{response.vote_average}} / 10</p>
-      <a href="{% url 'movies:search_detail' response.id %}" class="btn btn-primary">DETAIL</a>
+      <h5 class="card-title" id="cardtitle" style="background: linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{response.title}}</h5>
+      <p class="card-text fw-bold" id="cardbody">평점 : {{response.vote_average}}</p><br>
+      <a href="{% url 'movies:search_detail' response.id %}" class="btn-hover color-1">DETAIL</a>
     </div>
   </div>
   {% endfor %}

@@ -30,12 +30,28 @@ def create(request):
     }
     return render(request, 'community/create.html', context)
 
+@require_http_methods(['GET', 'POST'])
+def update(request, review_pk):
+    review = Review.objects.get(pk=review_pk)
+    form = ReviewForm(request.POST, instance=review)
+    if form.is_valid():
+        review = form.save()
+        return redirect('community:detail', review.pk)
+    else:
+        form = ReviewForm(instance=review)
+    context = {
+        'review' : review,
+        'form' : form,
+    }
+    return render(request, 'community/update.html', context)
+
 
 @require_POST
 def delete(request, review_pk):
     review = Review.objects.get(pk=review_pk)
     review.delete()
     return redirect('community:index')
+
 
 @require_GET
 def detail(request, review_pk):

@@ -3,6 +3,39 @@
 
 {% block content %}
 <style> 
+  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;800&display=swap');
+
+  #cardtitle {
+    font-family: 'Black Han Sans', sans-serif;
+  }
+
+  #cardbody {
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 20px;
+  }
+
+  #cardinfo {
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 20px;
+  }
+
+  #commenttitle{
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+  }
+
+  #commentinfo{
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 18px;
+  }
+
+  #commnetbody{
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 25px;
+  }
+
   .spot {
     position: absolute;
     width: 100%;
@@ -49,6 +82,47 @@
     stroke-width: 3px;
     stroke-dashoffset: 0;
     stroke: #06D6A0;
+  }
+
+  .buttons {
+      margin: 5%;
+      text-align: center;
+  }
+
+  .btn-hover {
+      width: 300px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      margin: 20px;
+      height: 55px;
+      text-align:center;
+      border: none;
+      background-size: 300% 100%;
+
+      border-radius: 100px;
+      moz-transition: all .4s ease-in-out;
+      -o-transition: all .4s ease-in-out;
+      -webkit-transition: all .4s ease-in-out;
+      transition: all .4s ease-in-out;
+  }
+
+  .btn-hover:hover {
+      background-position: 200% 0;
+      moz-transition: all .4s ease-in-out;
+      -o-transition: all .4s ease-in-out;
+      -webkit-transition: all .4s ease-in-out;
+      transition: all .4s ease-in-out;
+  }
+
+  .btn-hover:focus {
+      outline: none;
+  }
+
+  .btn-hover.color-1 {
+      background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+      box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
   }
 </style>
 
@@ -104,7 +178,7 @@
 
   <hr class="mt-5">
 
-  <div id="movieList">
+  <div id="movieList" class="container">
   </div>
 {% endblock content %}
 
@@ -135,30 +209,68 @@
     .then(res => {
       const movies_res = res.data.results
       movies_res.forEach(movie_res => {
-        const movieDiv = document.createElement('div')
+        const cardDiv = document.createElement('div')
+        cardDiv.className= 'card mt-5 mb-3'
 
-        const h2 = document.createElement('h2')
-        h2.innerText = movie_res.title
+        const rowDiv = document.createElement('div')
+        rowDiv.className= 'row g-0'
+
+        const imgDiv = document.createElement('div')
+        imgDiv.className = 'col-md-4'
 
         const img = document.createElement('img')
         img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie_res.poster_path}`
+        img.className = 'img-fluid rounded-start'
+
+        const colDiv = document.createElement('div')
+        colDiv.className = 'col-md-8'
+
+        const bodyDiv = document.createElement('div')
+        bodyDiv.className = 'card-body'
+
+        const h1 = document.createElement('h1')
+        h1.id = 'cardtitle'
+        h1.className = 'card-title fw-bold'
+        h1.style.background = 'linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd)'
+        h1.style.WebkitBackgroundClip = 'text'
+        h1.style.WebkitTextFillColor = 'transparent'
+        h1.innerText = movie_res.title
+
+        const br = document.createElement('br')
 
         const p_overview = document.createElement('p')
+        p_overview.id = 'cardbody'
+        p_overview.className = 'card-text'
         p_overview.innerText = movie_res.overview
 
+        const p_genre = document.createElement('p')
+        p_genre.className = 'card-text fw-bold'
+        p_genre.innerText = `✔ 장르 : ${movie_res.genres}`
+
+        const p_popularity = document.createElement('p')
+        p_popularity.className = 'card-text fw-bold'
+        p_popularity.innerText = `✔ 관객수 : ${movie_res.popularity}`
+
         const p_vote = document.createElement('p')
-        p_vote.innerText = `평점 : ${movie_res.vote_average}`
+        p_vote.className = 'card-text fw-bold'
+        p_vote.innerText = `✔ 평점 : ${movie_res.vote_average}`
+
+        const p_release_date = document.createElement('p')
+        p_release_date.className = 'card-text fw-bold'
+        p_release_date.innerText = `✔ 개봉일 : ${movie_res.release_date}`
 
         const a = document.createElement('a')
         a.innerText = 'DETAIL'
         a.href = `#`
         a.id='detailMovie'
-        a.className = `btn btn-primary ${movie_res.id}`
+        a.className = `btn-hover color-1 ${movie_res.id}`
 
-        const hr = document.createElement('hr')
-
-        movieDiv.append(h2, img, p_overview, p_vote, a, hr)
-        movieList.appendChild(movieDiv)
+        bodyDiv.append(h1, br, br, p_overview, br, br, p_genre, p_popularity, p_vote, p_release_date, a)
+        colDiv.append(bodyDiv)
+        imgDiv.append(img)
+        rowDiv.append(imgDiv, colDiv)
+        cardDiv.append(rowDiv)
+        movieList.append(cardDiv)
       })
 
       detail_btns = document.querySelectorAll('#detailMovie')
@@ -199,30 +311,68 @@
     .then(res => {
       const movies_res = res.data.results
       movies_res.forEach(movie_res => {
-        const movieDiv = document.createElement('div')
+        const cardDiv = document.createElement('div')
+        cardDiv.className= 'card mt-5 mb-3'
 
-        const h2 = document.createElement('h2')
-        h2.innerText = movie_res.title
+        const rowDiv = document.createElement('div')
+        rowDiv.className= 'row g-0'
+
+        const imgDiv = document.createElement('div')
+        imgDiv.className = 'col-md-4'
 
         const img = document.createElement('img')
         img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie_res.poster_path}`
+        img.className = 'img-fluid rounded-start'
+
+        const colDiv = document.createElement('div')
+        colDiv.className = 'col-md-8'
+
+        const bodyDiv = document.createElement('div')
+        bodyDiv.className = 'card-body'
+
+        const h1 = document.createElement('h1')
+        h1.id = 'cardtitle'
+        h1.className = 'card-title fw-bold'
+        h1.style.background = 'linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd)'
+        h1.style.WebkitBackgroundClip = 'text'
+        h1.style.WebkitTextFillColor = 'transparent'
+        h1.innerText = movie_res.title
+
+        const br = document.createElement('br')
 
         const p_overview = document.createElement('p')
+        p_overview.id = 'cardbody'
+        p_overview.className = 'card-text'
         p_overview.innerText = movie_res.overview
 
+        const p_genre = document.createElement('p')
+        p_genre.className = 'card-text fw-bold'
+        p_genre.innerText = `✔ 장르 : ${movie_res.genres}`
+
         const p_popularity = document.createElement('p')
-        p_popularity.innerText = `관람객 : ${movie_res.popularity}명`
+        p_popularity.className = 'card-text fw-bold'
+        p_popularity.innerText = `✔ 관객수 : ${movie_res.popularity}`
+
+        const p_vote = document.createElement('p')
+        p_vote.className = 'card-text fw-bold'
+        p_vote.innerText = `✔ 평점 : ${movie_res.vote_average}`
+
+        const p_release_date = document.createElement('p')
+        p_release_date.className = 'card-text fw-bold'
+        p_release_date.innerText = `✔ 개봉일 : ${movie_res.release_date}`
 
         const a = document.createElement('a')
         a.innerText = 'DETAIL'
-        a.href = `http://127.0.0.1:8000/search/detail/${movie_res.id}`
+        a.href = `#`
         a.id='detailMovie'
-        a.className = `btn btn-primary ${movie_res.id}`
+        a.className = `btn-hover color-1 ${movie_res.id}`
 
-        const hr = document.createElement('hr')
-
-        movieDiv.append(h2, img, p_overview, p_popularity, a, hr)
-        movieList.appendChild(movieDiv)
+        bodyDiv.append(h1, br, br, p_overview, br, br, p_genre, p_popularity, p_vote, p_release_date, a)
+        colDiv.append(bodyDiv)
+        imgDiv.append(img)
+        rowDiv.append(imgDiv, colDiv)
+        cardDiv.append(rowDiv)
+        movieList.append(cardDiv)
       })
 
       detail_btns = document.querySelectorAll('#detailMovie')
@@ -263,30 +413,68 @@
       console.log(res.data.results)
       const movies_res = res.data.results
       movies_res.forEach(movie_res => {
-        const movieDiv = document.createElement('div')
+        const cardDiv = document.createElement('div')
+        cardDiv.className= 'card mt-5 mb-3'
 
-        const h2 = document.createElement('h2')
-        h2.innerText = movie_res.title
+        const rowDiv = document.createElement('div')
+        rowDiv.className= 'row g-0'
+
+        const imgDiv = document.createElement('div')
+        imgDiv.className = 'col-md-4'
 
         const img = document.createElement('img')
         img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie_res.poster_path}`
+        img.className = 'img-fluid rounded-start'
+
+        const colDiv = document.createElement('div')
+        colDiv.className = 'col-md-8'
+
+        const bodyDiv = document.createElement('div')
+        bodyDiv.className = 'card-body'
+
+        const h1 = document.createElement('h1')
+        h1.id = 'cardtitle'
+        h1.className = 'card-title fw-bold'
+        h1.style.background = 'linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd)'
+        h1.style.WebkitBackgroundClip = 'text'
+        h1.style.WebkitTextFillColor = 'transparent'
+        h1.innerText = movie_res.title
+
+        const br = document.createElement('br')
 
         const p_overview = document.createElement('p')
+        p_overview.id = 'cardbody'
+        p_overview.className = 'card-text'
         p_overview.innerText = movie_res.overview
 
+        const p_genre = document.createElement('p')
+        p_genre.className = 'card-text fw-bold'
+        p_genre.innerText = `✔ 장르 : ${movie_res.genres}`
+
+        const p_popularity = document.createElement('p')
+        p_popularity.className = 'card-text fw-bold'
+        p_popularity.innerText = `✔ 관객수 : ${movie_res.popularity}`
+
+        const p_vote = document.createElement('p')
+        p_vote.className = 'card-text fw-bold'
+        p_vote.innerText = `✔ 평점 : ${movie_res.vote_average}`
+
         const p_release_date = document.createElement('p')
-        p_release_date.innerText = `개봉일 : ${movie_res.release_date}`
+        p_release_date.className = 'card-text fw-bold'
+        p_release_date.innerText = `✔ 개봉일 : ${movie_res.release_date}`
 
         const a = document.createElement('a')
         a.innerText = 'DETAIL'
-        a.href = `http://127.0.0.1:8000/search/detail/${movie_res.id}`
+        a.href = `#`
         a.id='detailMovie'
-        a.className = `btn btn-primary ${movie_res.id}`
+        a.className = `btn-hover color-1 ${movie_res.id}`
 
-        const hr = document.createElement('hr')
-
-        movieDiv.append(h2, img, p_overview, p_release_date, a, hr)
-        movieList.appendChild(movieDiv)
+        bodyDiv.append(h1, br, br, p_overview, br, br, p_genre, p_popularity, p_vote, p_release_date, a)
+        colDiv.append(bodyDiv)
+        imgDiv.append(img)
+        rowDiv.append(imgDiv, colDiv)
+        cardDiv.append(rowDiv)
+        movieList.append(cardDiv)
       })
       detail_btns = document.querySelectorAll('#detailMovie')
       detail_btns.forEach(detail_button => {
@@ -325,30 +513,68 @@
     .then(res => {
       const movies_res = res.data.results
       movies_res.forEach(movie_res => {
-        const movieDiv = document.createElement('div')
+        const cardDiv = document.createElement('div')
+        cardDiv.className= 'card mt-5 mb-3'
 
-        const h2 = document.createElement('h2')
-        h2.innerText = movie_res.title
+        const rowDiv = document.createElement('div')
+        rowDiv.className= 'row g-0'
+
+        const imgDiv = document.createElement('div')
+        imgDiv.className = 'col-md-4'
 
         const img = document.createElement('img')
         img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie_res.poster_path}`
+        img.className = 'img-fluid rounded-start'
+
+        const colDiv = document.createElement('div')
+        colDiv.className = 'col-md-8'
+
+        const bodyDiv = document.createElement('div')
+        bodyDiv.className = 'card-body'
+
+        const h1 = document.createElement('h1')
+        h1.id = 'cardtitle'
+        h1.className = 'card-title fw-bold'
+        h1.style.background = 'linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd)'
+        h1.style.WebkitBackgroundClip = 'text'
+        h1.style.WebkitTextFillColor = 'transparent'
+        h1.innerText = movie_res.title
+
+        const br = document.createElement('br')
 
         const p_overview = document.createElement('p')
+        p_overview.id = 'cardbody'
+        p_overview.className = 'card-text'
         p_overview.innerText = movie_res.overview
 
+        const p_genre = document.createElement('p')
+        p_genre.className = 'card-text fw-bold'
+        p_genre.innerText = `✔ 장르 : ${movie_res.genres}`
+
+        const p_popularity = document.createElement('p')
+        p_popularity.className = 'card-text fw-bold'
+        p_popularity.innerText = `✔ 관객수 : ${movie_res.popularity}`
+
         const p_vote = document.createElement('p')
-        p_vote.innerText = `평점 : ${movie_res.vote_average}`
+        p_vote.className = 'card-text fw-bold'
+        p_vote.innerText = `✔ 평점 : ${movie_res.vote_average}`
+
+        const p_release_date = document.createElement('p')
+        p_release_date.className = 'card-text fw-bold'
+        p_release_date.innerText = `✔ 개봉일 : ${movie_res.release_date}`
 
         const a = document.createElement('a')
         a.innerText = 'DETAIL'
-        a.href = `http://127.0.0.1:8000/search/detail/${movie_res.id}`
+        a.href = `#`
         a.id='detailMovie'
-        a.className = `btn btn-primary ${movie_res.id}`
+        a.className = `btn-hover color-1 ${movie_res.id}`
 
-        const hr = document.createElement('hr')
-
-        movieDiv.append(h2, img, p_overview, p_vote, a, hr)
-        movieList.appendChild(movieDiv)
+        bodyDiv.append(h1, br, br, p_overview, br, br, p_genre, p_popularity, p_vote, p_release_date, a)
+        colDiv.append(bodyDiv)
+        imgDiv.append(img)
+        rowDiv.append(imgDiv, colDiv)
+        cardDiv.append(rowDiv)
+        movieList.append(cardDiv)
       })
 
       detail_btns = document.querySelectorAll('#detailMovie')
@@ -394,31 +620,68 @@
       .then(res => {
         const movies = res.data
         movies.forEach(movie => {
-          const movieDiv = document.createElement('div')
-
-          const h2 = document.createElement('h2')
-          h2.innerText = movie.title
-
+          const cardDiv = document.createElement('div')
+          cardDiv.className= 'card mt-5 mb-3'
+  
+          const rowDiv = document.createElement('div')
+          rowDiv.className= 'row g-0'
+  
+          const imgDiv = document.createElement('div')
+          imgDiv.className = 'col-md-4'
+  
           const img = document.createElement('img')
           img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`
-
+          img.className = 'img-fluid rounded-start'
+  
+          const colDiv = document.createElement('div')
+          colDiv.className = 'col-md-8'
+  
+          const bodyDiv = document.createElement('div')
+          bodyDiv.className = 'card-body'
+  
+          const h1 = document.createElement('h1')
+          h1.id = 'cardtitle'
+          h1.className = 'card-title fw-bold'
+          h1.style.background = 'linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd)'
+          h1.style.WebkitBackgroundClip = 'text'
+          h1.style.WebkitTextFillColor = 'transparent'
+          h1.innerText = movie.title
+  
+          const br = document.createElement('br')
+  
           const p_overview = document.createElement('p')
+          p_overview.id = 'cardbody'
+          p_overview.className = 'card-text'
           p_overview.innerText = movie.overview
-
-          const p_vote = document.createElement('p')
-          p_vote.innerText = `평점 : ${movie.vote_average}`
-
+  
+          const p_genre = document.createElement('p')
+          p_genre.className = 'card-text fw-bold'
+          p_genre.innerText = `✔ 장르 : ${movie.genres}`
+  
           const p_popularity = document.createElement('p')
-          p_popularity.innerText = `관람객 : ${movie.popularity}명`
-
+          p_popularity.className = 'card-text fw-bold'
+          p_popularity.innerText = `✔ 관객수 : ${movie.popularity}`
+  
+          const p_vote = document.createElement('p')
+          p_vote.className = 'card-text fw-bold'
+          p_vote.innerText = `✔ 평점 : ${movie.vote_average}`
+  
+          const p_release_date = document.createElement('p')
+          p_release_date.className = 'card-text fw-bold'
+          p_release_date.innerText = `✔ 개봉일 : ${movie.release_date}`
+  
           const a = document.createElement('a')
           a.innerText = 'DETAIL'
-          a.href = `/${movie.id}/`
-          a.className = 'btn btn-primary'
-          const hr = document.createElement('hr')
-
-          movieDiv.append(h2, img, p_overview, p_vote, p_popularity, a, hr)
-          movieList.appendChild(movieDiv)
+          a.href = `#`
+          a.id='detailMovie'
+          a.className = `btn-hover color-1 ${movie.id}`
+  
+          bodyDiv.append(h1, br, br, p_overview, br, br, p_genre, p_popularity, p_vote, p_release_date, a)
+          colDiv.append(bodyDiv)
+          imgDiv.append(img)
+          rowDiv.append(imgDiv, colDiv)
+          cardDiv.append(rowDiv)
+          movieList.append(cardDiv)
         })
       })
     }

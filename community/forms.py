@@ -1,5 +1,4 @@
 from django import forms
-from matplotlib import widgets
 from .models import Review, ReviewComment
 
 
@@ -40,4 +39,10 @@ class ReviewCommentForm(forms.ModelForm):
     class Meta:
         model = ReviewComment
         exclude = ['review', 'user']
-        
+        widgets = {
+            'content' : forms.Textarea(attrs={
+                'class': "form-control",
+                'style': 'max-height: 50px; max-width: 400px;',
+                'placeholder': '내용을 입력해주세요.',
+            })
+        }

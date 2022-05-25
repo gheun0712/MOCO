@@ -1,0 +1,427 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<style> 
+  .spot {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .svg-wrapper {
+    margin-top: 0;
+    position: relative;
+    width: 150px;
+    /*make sure to use same height/width as in the html*/
+    height: 40px;
+    display: inline-block;
+    border-radius: 3px;
+    margin-left: 5px;
+    margin-right: 5px
+  }
+
+  #shape {
+    stroke-width: 6px;
+    fill: transparent;
+    stroke: #009FFD;
+    stroke-dasharray: 85 400;
+    stroke-dashoffset: -220;
+    transition: 1s all ease;
+  }
+
+  #text {
+    margin-top: -35px;
+    text-align: center;
+  }
+  
+  #text a {
+    color: Black;
+    text-decoration: none;
+    font-weight: 100;
+    font-size: 1.1em;
+  }
+
+  .svg-wrapper:hover #shape {
+    stroke-dasharray: 50 0;
+    stroke-width: 3px;
+    stroke-dashoffset: 0;
+    stroke: #06D6A0;
+  }
+</style>
+
+  {% comment %} <h1 id="title">영화추천</h1> {% endcomment %}
+  <br>
+  <div class="buttons" align="center">
+      <div class="svg-wrapper">
+        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+          <rect id="shape" height="40" width="150"/>
+          <div id="text">
+            <input id="averageBtn" type="submit" class="btn fw-bold" value="랭킹순">
+          </div>
+        </svg>
+      </div>
+
+      <div class="svg-wrapper">
+        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+          <rect id="shape" height="40" width="150" />
+          <div id="text">
+            <input id="popularityBtn" type="submit" class="btn fw-bold" value="관람객 순">
+          </div>
+        </svg>
+      </div>
+
+      <div class="svg-wrapper">
+        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+          <rect id="shape" height="40" width="150" />
+          <div id="text">
+            <input id="nowPlayingBtn"type="submit" class="btn fw-bold" value="현재 상영작">
+          </div>
+        </svg>
+      </div>
+
+      <div class="svg-wrapper">
+        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+          <rect id="shape" height="40" width="150" />
+          <div id="text">
+            <input id="upComingBtn"type="submit" class="btn fw-bold" value="차기 상영작">
+          </div>
+        </svg>
+      </div>
+
+      {% if user.is_authenticated %}
+        <div class="svg-wrapper">
+          <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+            <rect id="shape" height="40" width="150" />
+            <div id="text">
+              <input id="myRecommendBtn"type="submit" class="btn fw-bold" value="나만의 추천">
+            </div>
+          </svg>
+        </div>
+      {% endif %}
+  </div>
+
+  <hr class="mt-5">
+
+  <div id="movieList">
+  </div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  const title = document.querySelector('#title')
+  const averageBtn = document.querySelector('#averageBtn')
+  const popularityBtn = document.querySelector('#popularityBtn')
+  const nowPlayingBtn = document.querySelector('#nowPlayingBtn')
+  const upComingBtn = document.querySelector('#upComingBtn')
+  const myRecommendBtn = document.querySelector('#myRecommendBtn')
+  var detail_btns = document.querySelectorAll('#detailMovie')
+  const movies = JSON.parse("{{ movies_js | escapejs }}")
+  const movies_all = JSON.parse("{{ movies_all_js | escapejs }}")
+
+  averageBtn.addEventListener('click', function(event){
+    event.preventDefault()
+    const movieList = document.querySelector('#movieList')
+    while (movieList.hasChildNodes()) {
+      movieList.removeChild( movieList.firstChild)
+    }
+
+    axios({
+      method: 'get',
+      url: '/recommended/vote/'
+    })
+    .then(res => {
+      const movies_res = res.data.results
+      movies_res.forEach(movie_res => {
+        const movieDiv = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.innerText = movie_res.title
+
+        const img = document.createElement('img')
+        img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie_res.poster_path}`
+
+        const p_overview = document.createElement('p')
+        p_overview.innerText = movie_res.overview
+
+        const p_vote = document.createElement('p')
+        p_vote.innerText = `평점 : ${movie_res.vote_average}`
+
+        const a = document.createElement('a')
+        a.innerText = 'DETAIL'
+        a.href = `#`
+        a.id='detailMovie'
+        a.className = `btn btn-primary ${movie_res.id}`
+
+        const hr = document.createElement('hr')
+
+        movieDiv.append(h2, img, p_overview, p_vote, a, hr)
+        movieList.appendChild(movieDiv)
+      })
+
+      detail_btns = document.querySelectorAll('#detailMovie')
+      detail_btns.forEach(detail_button => {
+        detail_button.addEventListener('click', function(event){
+          event.preventDefault()
+          const movie_id = detail_button.className.split(' ')[2]
+          console.log(movie_id)
+          var exist = 0
+          for (var movie of movies_all) {
+            if ( movie.id == movie_id ){
+              exist = 1
+              var movie_pk = movie.pk
+              break
+            }
+          }
+          if (exist == 0) {
+            location.href = `http://127.0.0.1:8000/search/detail/${movie_id}`
+          } else {
+            location.href = `http://127.0.0.1:8000/${movie_pk}`
+          }
+        })
+      })
+    })
+  })
+
+  popularityBtn.addEventListener('click', function(event){
+    event.preventDefault()
+    const movieList = document.querySelector('#movieList')
+    while (movieList.hasChildNodes()) {
+      movieList.removeChild( movieList.firstChild)
+    }
+
+    axios({
+      method: 'get',
+      url: '/recommended/popularity/'
+    })
+    .then(res => {
+      const movies_res = res.data.results
+      movies_res.forEach(movie_res => {
+        const movieDiv = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.innerText = movie_res.title
+
+        const img = document.createElement('img')
+        img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie_res.poster_path}`
+
+        const p_overview = document.createElement('p')
+        p_overview.innerText = movie_res.overview
+
+        const p_popularity = document.createElement('p')
+        p_popularity.innerText = `관람객 : ${movie_res.popularity}명`
+
+        const a = document.createElement('a')
+        a.innerText = 'DETAIL'
+        a.href = `http://127.0.0.1:8000/search/detail/${movie_res.id}`
+        a.id='detailMovie'
+        a.className = `btn btn-primary ${movie_res.id}`
+
+        const hr = document.createElement('hr')
+
+        movieDiv.append(h2, img, p_overview, p_popularity, a, hr)
+        movieList.appendChild(movieDiv)
+      })
+
+      detail_btns = document.querySelectorAll('#detailMovie')
+      detail_btns.forEach(detail_button => {
+        detail_button.addEventListener('click', function(event){
+          event.preventDefault()
+          const movie_id = detail_button.className.split(' ')[2]
+          var exist = 0
+          for (var movie of movies_all) {
+            if ( movie.id == movie_id ){
+              exist = 1
+              var movie_pk = movie.pk
+              break
+            }
+          }
+          if (exist == 0) {
+            location.href = `http://127.0.0.1:8000/search/detail/${movie_id}`
+          } else {
+            location.href = `http://127.0.0.1:8000/${movie_pk}`
+          }
+        })
+      })
+    })
+  })
+
+  nowPlayingBtn.addEventListener('click', function(event){
+    event.preventDefault()
+    const movieList = document.querySelector('#movieList')
+    while (movieList.hasChildNodes()) {
+      movieList.removeChild( movieList.firstChild)
+    }
+
+    axios({
+      method: 'get',
+      url: '/recommended/now_playing/'
+    })
+    .then(res => {
+      console.log(res.data.results)
+      const movies_res = res.data.results
+      movies_res.forEach(movie_res => {
+        const movieDiv = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.innerText = movie_res.title
+
+        const img = document.createElement('img')
+        img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie_res.poster_path}`
+
+        const p_overview = document.createElement('p')
+        p_overview.innerText = movie_res.overview
+
+        const p_release_date = document.createElement('p')
+        p_release_date.innerText = `개봉일 : ${movie_res.release_date}`
+
+        const a = document.createElement('a')
+        a.innerText = 'DETAIL'
+        a.href = `http://127.0.0.1:8000/search/detail/${movie_res.id}`
+        a.id='detailMovie'
+        a.className = `btn btn-primary ${movie_res.id}`
+
+        const hr = document.createElement('hr')
+
+        movieDiv.append(h2, img, p_overview, p_release_date, a, hr)
+        movieList.appendChild(movieDiv)
+      })
+      detail_btns = document.querySelectorAll('#detailMovie')
+      detail_btns.forEach(detail_button => {
+        detail_button.addEventListener('click', function(event){
+          event.preventDefault()
+          const movie_id = detail_button.className.split(' ')[2]
+          var exist = 0
+          for (var movie of movies_all) {
+            if ( movie.id == movie_id ){
+              exist = 1
+              var movie_pk = movie.pk
+              break
+            }
+          }
+          if (exist == 0) {
+            location.href = `http://127.0.0.1:8000/search/detail/${movie_id}`
+          } else {
+            location.href = `http://127.0.0.1:8000/${movie_pk}`
+          }
+        })
+      })
+    })
+  })
+
+  upComingBtn.addEventListener('click', function(event){
+    event.preventDefault()
+    const movieList = document.querySelector('#movieList')
+    while (movieList.hasChildNodes()) {
+      movieList.removeChild( movieList.firstChild)
+    }
+
+    axios({
+      method: 'get',
+      url: '/recommended/upcoming/'
+    })
+    .then(res => {
+      const movies_res = res.data.results
+      movies_res.forEach(movie_res => {
+        const movieDiv = document.createElement('div')
+
+        const h2 = document.createElement('h2')
+        h2.innerText = movie_res.title
+
+        const img = document.createElement('img')
+        img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie_res.poster_path}`
+
+        const p_overview = document.createElement('p')
+        p_overview.innerText = movie_res.overview
+
+        const p_vote = document.createElement('p')
+        p_vote.innerText = `평점 : ${movie_res.vote_average}`
+
+        const a = document.createElement('a')
+        a.innerText = 'DETAIL'
+        a.href = `http://127.0.0.1:8000/search/detail/${movie_res.id}`
+        a.id='detailMovie'
+        a.className = `btn btn-primary ${movie_res.id}`
+
+        const hr = document.createElement('hr')
+
+        movieDiv.append(h2, img, p_overview, p_vote, a, hr)
+        movieList.appendChild(movieDiv)
+      })
+
+      detail_btns = document.querySelectorAll('#detailMovie')
+      detail_btns.forEach(detail_button => {
+        detail_button.addEventListener('click', function(event){
+          event.preventDefault()
+          const movie_id = detail_button.className.split(' ')[2]
+          var exist = 0
+          for (var movie of movies_all) {
+            if ( movie.id == movie_id ){
+              exist = 1
+              var movie_pk = movie.pk
+              break
+            }
+          }
+          if (exist == 0) {
+            location.href = `http://127.0.0.1:8000/search/detail/${movie_id}`
+          } else {
+            location.href = `http://127.0.0.1:8000/${movie_pk}`
+          }
+        })
+      })
+    })
+  })
+
+  const genres = {{ genres }}
+  myRecommendBtn.addEventListener('click', function(event) {
+    event.preventDefault()
+    if (movies.length < 5) {
+      alert('좋아하는 영화를 최소 5개 골라주세요.')
+    } else {
+      const movieList = document.querySelector('#movieList')
+      while (movieList.hasChildNodes()) {
+      movieList.removeChild( movieList.firstChild)
+      }
+
+      var genre = _.sample(genres)
+
+      axios({
+        method: 'get',
+        url: `/recommended/my/${genre}`
+      })
+      .then(res => {
+        const movies = res.data
+        movies.forEach(movie => {
+          const movieDiv = document.createElement('div')
+
+          const h2 = document.createElement('h2')
+          h2.innerText = movie.title
+
+          const img = document.createElement('img')
+          img.src = `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`
+
+          const p_overview = document.createElement('p')
+          p_overview.innerText = movie.overview
+
+          const p_vote = document.createElement('p')
+          p_vote.innerText = `평점 : ${movie.vote_average}`
+
+          const p_popularity = document.createElement('p')
+          p_popularity.innerText = `관람객 : ${movie.popularity}명`
+
+          const a = document.createElement('a')
+          a.innerText = 'DETAIL'
+          a.href = `/${movie.id}/`
+          a.className = 'btn btn-primary'
+          const hr = document.createElement('hr')
+
+          movieDiv.append(h2, img, p_overview, p_vote, p_popularity, a, hr)
+          movieList.appendChild(movieDiv)
+        })
+      })
+    }
+  })
+</script>
+{% endblock script %}

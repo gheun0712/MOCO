@@ -27,9 +27,12 @@
   <br>
   <div style="border: 3px dashed #C6C6C6; padding: 0.6em;">
     <br>
-
-    <p id="info" class="fw-bold">📽 영화 제목: {{ review.movie_title }}</p>
-    <p id="info">⭐ 평점: {{ review.rank }}</p>
+      {% if review.movie_title %}
+      <p id="info" class="fw-bold">📽 영화 제목: {{ review.movie_title }}</p>
+        {% if review.rank %}
+        <p id="info">⭐ 평점: {{ review.rank }}</p>
+        {% endif %}
+    {% endif %}
     <p id="content" >🔗 내용: {{ review.content }}</p>
     <div id="info" style="display: inline;">😎 작성자: <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user}}</a></div>
     <br>
@@ -82,10 +85,13 @@
   <br>
 
   {% if request.user.is_authenticated %}
-    <form action="{% url 'community:create_comment' review.pk %}" method="POST">
+    <form action="{% url 'community:create_comment' review.pk %}" method="POST" style="display:inline-block; height:100px;">
       {% csrf_token %}
-      {{ comment_form }}
-      <input type="submit" class="btn btn-sm btn-outline-success mx-3" value="등록">
+      <div style="width:400px; display:inline-block;" >
+        <p>댓글 : </p>
+        {{ comment_form.content }}
+      </div>
+      <input type="submit" class="btn btn-sm btn-outline-success mx-3" value="등록" style="display:inline-block; margin-bottom:20px ;">
     </form>
   {% else %}
     <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
@@ -101,7 +107,7 @@
       likeform.addEventListener('click', function(event){
         event.preventDefault()
         const likebtn = likeform.children[1]
-        const likep = likeform.children[2]
+        const likep = likeform.children[4]
 
         axios.defaults.xsrfCookieName = 'csrftoken'
         axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -109,10 +115,12 @@
         axios.post(likeform.action)
         .then(response => {
           console.log('딸깍')
-          if (likebtn.innerText == '추천'){
-            likebtn.innerText = '추천 취소'
+          if (likebtn.innerText == '　추천'){
+            likebtn.innerText = '　추천 취소'
+            likebtn.style = 'color:red;'
           } else {
-            likebtn.innerText = '추천'
+            likebtn.innerText = '　추천'
+            likebtn.style= 'color:black'
           }
           likep.innerText = `${response.data.count} 명이 이 글을 좋아합니다.`
         }) 
@@ -123,7 +131,7 @@
     const delete_buttons = document.querySelectorAll('#delete')
     delete_buttons.forEach(delete_button => {
       delete_button.addEventListener('click', function(){
-        const comment_pk = delete_button.className
+        const comment_pk = delete_button.className.split(' ')[0]
 
         axios.defaults.xsrfCookieName = 'csrftoken'
         axios.defaults.xsrfHeaderName = 'X-CSRFToken'

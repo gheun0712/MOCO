@@ -150,7 +150,10 @@
     <div class="card-body">
       <h5 class="card-title" id="cardtitle" style="background: linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{response.title}}</h5>
       <p class="card-text fw-bold" id="cardbody">평점 : {{response.vote_average}}</p><br>
-      <a href="{% url 'movies:search_detail' response.id %}" class="btn-hover color-1">DETAIL</a>
+      <a id="detailMovie" href="#" class="btn-hover color-1 {{response.id}}">DETAIL</a>
+      {% if user.is_superuser %}
+        <a id="addMovie" href="#" class="btn-hover color-1 {{response.id}}">영화 추가</a>
+      {% endif %}
     </div>
   </div>
   {% endfor %}
@@ -165,7 +168,7 @@
       if (keyword.value.length < 2){
         alert('두 글자 이상 입력해주세요.')
       } else {
-        window.location.href = `http://127.0.0.1:8000/movies/search/index/${keyword.value}`
+        window.location.href = `http://127.0.0.1:8000/search/index/${keyword.value}`
       }
     })
 
@@ -173,8 +176,62 @@
       if (keyword.value.length < 2){
         alert('두 글자 이상 입력해주세요.')
       } else {
-        window.location.href = `http://127.0.0.1:8000/movies/search/index/${keyword.value}`
+        window.location.href = `http://127.0.0.1:8000/search/index/${keyword.value}`
       }
     }
+
+    const movies = JSON.parse("{{ movies_js | escapejs }}")
+    const add_btns = document.querySelectorAll('#addMovie')
+    add_btns.forEach(add_button => {
+      add_button.addEventListener('click', function(event){
+        event.preventDefault()
+        const movie_id = add_button.className.split(' ')[2]
+        var exist = 0
+        for (var movie of movies) {
+          if ( movie.id == movie_id ) {
+            exist = 1
+            break
+          }
+        }
+
+        if (exist == 0) {
+          axios.defaults.xsrfCookieName = 'csrftoken'
+          axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+          axios.post(`http://127.0.0.1:8000/${movie_id}/movie/create`)
+          .then(res => {
+          alert('영화가 추가되었습니다.')
+          location.reload()
+        })
+          .catch(err =>
+          console.log(err))
+        } else {
+          alert('이미 있는 영화입니다.')
+        }
+      })
+    })
+
+    const detail_btns = document.querySelectorAll('#detailMovie')
+    detail_btns.forEach(detail_button => {
+      detail_button.addEventListener('click', function(event){
+        event.preventDefault()
+        const movie_id = detail_button.className.split(' ')[2]
+        var exist = 0
+        for (var movie of movies) {
+          if ( movie.id == movie_id ){
+            exist = 1
+            console.log(movie)
+            var movie_pk = movie.pk
+            break
+          }
+        }
+
+        if (exist == 0) {
+          location.href = `http://127.0.0.1:8000/search/detail/${movie_id}`
+        } else {
+          location.href = `http://127.0.0.1:8000/${movie_pk}`
+        }
+      })
+    })
   </script>
 {% endblock script %}

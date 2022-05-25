@@ -7,6 +7,7 @@ class Genre(models.Model):
 
 
 class Movie(models.Model):
+    movie_id = models.IntegerField()
     title = models.CharField(max_length=100)
     release_date = models.DateField()
     popularity = models.FloatField()
@@ -16,6 +17,12 @@ class Movie(models.Model):
     poster_path = models.CharField(max_length=200)
     genres = models.ManyToManyField(Genre)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies')
+
+    def to_json(self):
+        return {
+            'id' : self.movie_id,
+            'pk' : self.pk,
+        }
 
 
 class MovieComment(models.Model):

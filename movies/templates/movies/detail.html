@@ -102,12 +102,12 @@
     const delete_buttons = document.querySelectorAll('#delete')
     delete_buttons.forEach(delete_button => {
       delete_button.addEventListener('click', function(){
-        const comment_pk = delete_button.className
+        const comment_pk = delete_button.className.split(' ')[0]
 
         axios.defaults.xsrfCookieName = 'csrftoken'
         axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-        axios.post(`http://127.0.0.1:8000/movies/${movie_pk}/comments/${comment_pk}/delete`)
+        axios.post(`http://127.0.0.1:8000/${movie_pk}/comments/${comment_pk}/delete`)
         .then(res =>
         $('#comment').load(window.location.href+' #comment'))
         .catch(err =>

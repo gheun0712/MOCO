@@ -12,8 +12,8 @@
   }
 
   #content {
-    font-family: 'Poor Story', cursive;
-    font-size: 25px;
+    font-family: 'Gothic A1', sans-serif;
+    font-size: 20px;
   }
 
   #info {
@@ -27,18 +27,20 @@
   <br>
   <div style="border: 3px dashed #C6C6C6; padding: 0.6em;">
     <br>
-      {% if review.movie_title %}
+    {% if review.movie_title %}
       <p id="info" class="fw-bold">📽 영화 제목: {{ review.movie_title }}</p>
-        {% if review.rank %}
+      {% if review.rank %}
         <p id="info">⭐ 평점: {{ review.rank }}</p>
-        {% endif %}
+      {% endif %}
     {% endif %}
+    <hr style="border: dashed;" class="mb-4">
     <p id="content" >🔗 내용: {{ review.content }}</p>
+    <hr style="border: dashed;" class="mb-4">
     <div id="info" style="display: inline;">😎 작성자: <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user}}</a></div>
     <br>
     <br>
-    <p id="info" style="font-size:15px;">작성 시각: {{ review.created_at }}</p>
-    <p id="info" style="font-size:15px;">수정 시각: {{ review.updated_at }}</p>
+    <p id="info" style="font-size:15px;">⏱ 작성 시각: {{ review.created_at }}</p>
+    <p id="info" style="font-size:15px;">⏱ 수정 시각: {{ review.updated_at }}</p>
 
     <form id="likeForm" action="{% url 'community:like' review.pk %}" method="POST" class="d-inline">
       {% csrf_token %}
@@ -101,47 +103,47 @@
 {% endblock  %}
 
 {% block script %}
-  <script>
-    const likeforms = document.querySelectorAll('#likeForm')
-    likeforms.forEach(likeform => {
-      likeform.addEventListener('click', function(event){
-        event.preventDefault()
-        const likebtn = likeform.children[1]
-        const likep = likeform.children[4]
+<script>
+  const likeforms = document.querySelectorAll('#likeForm')
+  likeforms.forEach(likeform => {
+    likeform.addEventListener('click', function(event){
+      event.preventDefault()
+      const likebtn = likeform.children[1]
+      const likep = likeform.children[4]
 
-        axios.defaults.xsrfCookieName = 'csrftoken'
-        axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+      axios.defaults.xsrfCookieName = 'csrftoken'
+      axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-        axios.post(likeform.action)
-        .then(response => {
-          console.log('딸깍')
-          if (likebtn.innerText == '　추천'){
-            likebtn.innerText = '　추천 취소'
-            likebtn.style = 'color:red;'
-          } else {
-            likebtn.innerText = '　추천'
-            likebtn.style= 'color:black'
-          }
-          likep.innerText = `${response.data.count} 명이 이 글을 좋아합니다.`
-        }) 
-      })
+      axios.post(likeform.action)
+      .then(response => {
+        console.log('딸깍')
+        if (likebtn.innerText == '　추천'){
+          likebtn.innerText = '　추천 취소'
+          likebtn.style = 'color:red;'
+        } else {
+          likebtn.innerText = '　추천'
+          likebtn.style= 'color:black'
+        }
+        likep.innerText = `${response.data.count} 명이 이 글을 좋아합니다.`
+      }) 
     })
+  })
 
-    const review_pk = {{ review.pk }}
-    const delete_buttons = document.querySelectorAll('#delete')
-    delete_buttons.forEach(delete_button => {
-      delete_button.addEventListener('click', function(){
-        const comment_pk = delete_button.className.split(' ')[0]
+  const review_pk = {{ review.pk }}
+  const delete_buttons = document.querySelectorAll('#delete')
+  delete_buttons.forEach(delete_button => {
+    delete_button.addEventListener('click', function(){
+      const comment_pk = delete_button.className.split(' ')[0]
 
-        axios.defaults.xsrfCookieName = 'csrftoken'
-        axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+      axios.defaults.xsrfCookieName = 'csrftoken'
+      axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-        axios.post(`http://127.0.0.1:8000/community/${review_pk}/comments/${comment_pk}/delete`)
-        .then(res =>
-        $('#comment').load(window.location.href+' #comment'))
-        .catch(err =>
-        console.log(err))
-      })
+      axios.post(`http://127.0.0.1:8000/community/${review_pk}/comments/${comment_pk}/delete`)
+      .then(res =>
+      $('#comment').load(window.location.href+' #comment'))
+      .catch(err =>
+      console.log(err))
     })
-  </script>
+  })
+</script>
 {% endblock script %}

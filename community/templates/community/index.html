@@ -27,22 +27,9 @@
 
   <br>
   <br>
-  {% comment %} <h1 align="center">Community</h1> 
-  <hr class="mb-5"> {% endcomment %}
-
-    {% comment %} {% for review in reviews %}
-      <h4 id="title">
-        <a style="text-decoration:none; color:white; border-radius: 5em; padding: 0.5em; background: #FFBEBE" href="{% url 'community:detail' review.pk %}">
-          　💡　{{review.title}} ({{review.reviewcomment_set.all|length}})　　</a>
-      </h4><br>
-      <p style="font-size: 15px; font-weight: 500">😎　작성자 : <a href="{% url 'accounts:profile' review.user.username %}">{{ review.user }}</a></p>
-      <p class="">❤　{{ review.like_users.all|length }} 명이 이 글을 추천합니다.</p>
-      <hr class="mb-5">
-    {% endfor %} {% endcomment %}
-
   <a id="review" href="{% url 'community:create'%}" class="nav-link link-dark px-2 fw-bold" align="right">NEW REVIEW</a>
   <br>
-  <table class="table table table-striped text-center" id="list">
+  <table class="table table-bordered table-striped text-center" id="list">
     <thead>
       <tr class="table-primary text-white fw-bold"> 
         <th scope="col">제목</th>

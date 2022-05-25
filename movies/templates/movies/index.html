@@ -115,8 +115,6 @@
   }
 
 </style>
-
-  {% comment %} <h1 class="text-center">Movies </h1> {% endcomment %}
   <br>
   <div class="d-flex justify-content-end">
     <input onkeypress="if(event.keyCode==13){searchinput();}" type="text" id="keyword" name="keyword" placeholder="영화검색"
@@ -164,7 +162,7 @@
           개봉일 : {{ movie.release_date|date:"Y-m-d" }} <br>
           평점 : {{ movie.vote_average }}<br>
           관객 : {{ movie.popularity }}명 <br>
-          <p class="fw-bold" id="like{{movie.pk}}">{{ movie.like_users.all|length }}명이 이 영화를 좋아합니다.</p>
+          <p  class="fw-bold" id="like{{movie.pk}}">{{ movie.like_users.all|length }}명이 이 영화를 좋아합니다.</p>
         </p>
         <div class="buttons justify-content-between">
           <a href="{% url 'movies:detail' movie.pk %}" class="btn-hover color-1">Detail</a>
@@ -186,7 +184,7 @@
       likebtn.addEventListener('click', function(event){
         event.preventDefault()
         
-        const movie_pk = likebtn.href.split('/')[3]
+        const movie_pk = likebtn.href.split('/')[4]
         const likep = document.querySelector(`#like${movie_pk}`)
         axios.get(likebtn.href)
         .then(response => {
@@ -205,7 +203,7 @@
       if (keyword.value.length < 2){
         alert('두 글자 이상 입력해주세요.')
       } else {
-        window.location.href = `http://127.0.0.1:8000/search/index/${keyword.value}`
+        window.location.href = `http://127.0.0.1:8000/movies/search/index/${keyword.value}`
       }
     })
 
@@ -213,7 +211,7 @@
       if (keyword.value.length < 2){
         alert('두 글자 이상 입력해주세요.')
       } else {
-        window.location.href = `http://127.0.0.1:8000/search/index/${keyword.value}`
+        window.location.href = `http://127.0.0.1:8000/movies/search/index/${keyword.value}`
       }
     }
 
@@ -235,4 +233,5 @@
       })
     })
   </script>
+  
 {% endblock script %}

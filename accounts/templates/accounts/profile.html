@@ -1,20 +1,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>{{ person.username }}의 프로필 페이지</h1><hr>
 
-  <h3>좋아요 한 영화</h3>
-  {% for movie in movies %}
-    <p><a href="{% url 'movies:detail' movie.pk %}">{{movie.title}}</a></p>
-  {% endfor %}<hr>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Nanum+Gothic&display=swap');
 
-  <h3>커뮤니티에 작성한 글</h3>
-  {% for review in reviews %}
-    <p><a href="{% url 'community:detail' review.pk %}">{{review.title}}</a></p>
-  {% endfor %}<hr>
+    #title {
+      font-family: 'Do Hyeon', sans-serif;
+    }
 
-  <h3>커뮤니티에 작성한 댓글</h3>
-  {% for comment in comments %}
-    <p>{{comment.content}} - <a href="{% url 'community:detail' comment.review.pk %}">{{comment.review.title}}</a></p>
-  {% endfor %}
+
+  </style>
+
+  <h1 id="title" class="mt-5 fw-bold text-center"><i class=" fa fa-solid fa-address-card">　[ {{ person.username }} ] 의 프로필</i></h1>
+  <hr class="mt-5">
+
+  <p class="mt-5" align="center">
+    <button class="btn btn-primary mb-5" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">전체 보기</button>
+    <br>
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">좋아요 한 영화</a>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">작성한 글</button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">작성한 댓글</button>
+  </p>
+  <div class="row">
+    <div class="col">
+      <div class="collapse multi-collapse" id="multiCollapseExample1">
+        <div class="card card-body">
+          <ul>
+            <h5 class="text-center mb-3 fw-bold text-white" style="font-family: 'Nanum Gothic', sans-serif; background-color: #FF98A3;">＜좋아요 한 영화＞</h5>
+            {% for movie in movies %}
+              <li><p><a style="text-decoration: none; font-family: 'Nanum Gothic', sans-serif;" href="{% url 'movies:detail' movie.pk %}">{{movie.title}}</a></p></li>
+            {% endfor %}
+          </ul>        
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="collapse multi-collapse" id="multiCollapseExample2">
+        <div class="card card-body">
+          <ul>
+            <h5 class="text-center mb-3 fw-bold text-white" style="font-family: 'Nanum Gothic', sans-serif; background-color: #FFA778;">＜작성한 글＞</h5>
+            {% for review in reviews %}
+              <li><p><a style="text-decoration: none; font-family: 'Nanum Gothic', sans-serif;" href="{% url 'community:detail' review.pk %}">{{review.title}}</a></p></li>
+            {% endfor %}
+          </ul>     
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="collapse multi-collapse" id="multiCollapseExample3">
+        <div class="card card-body">
+          <ul>
+            <h5 class="text-center mb-3 fw-bold text-white" style="font-family: 'Nanum Gothic', sans-serif; background-color: #64DB99">＜작성한 댓글＞</h5>
+            {% for comment in comments %}
+              <li><p style="font-family: 'Nanum Gothic', sans-serif;" >{{comment.content}} <br> :: <a style="text-decoration: none; font-family: 'Nanum Gothic', sans-serif;" href="{% url 'community:detail' comment.review.pk %}">{{comment.review.title}}</a></p></li>
+            {% endfor %}
+          </ul>      
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}

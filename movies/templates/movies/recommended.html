@@ -52,56 +52,55 @@
   }
 </style>
 
-  {% comment %} <h1 id="title">영화추천</h1> {% endcomment %}
-  <br>
-  <div class="buttons" align="center">
-      <div class="svg-wrapper">
-        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
-          <rect id="shape" height="40" width="150"/>
-          <div id="text">
-            <input id="averageBtn" type="submit" class="btn fw-bold" value="랭킹순">
-          </div>
-        </svg>
-      </div>
-
-      <div class="svg-wrapper">
-        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
-          <rect id="shape" height="40" width="150" />
-          <div id="text">
-            <input id="popularityBtn" type="submit" class="btn fw-bold" value="관람객 순">
-          </div>
-        </svg>
-      </div>
-
-      <div class="svg-wrapper">
-        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
-          <rect id="shape" height="40" width="150" />
-          <div id="text">
-            <input id="nowPlayingBtn"type="submit" class="btn fw-bold" value="현재 상영작">
-          </div>
-        </svg>
-      </div>
-
-      <div class="svg-wrapper">
-        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
-          <rect id="shape" height="40" width="150" />
-          <div id="text">
-            <input id="upComingBtn"type="submit" class="btn fw-bold" value="차기 상영작">
-          </div>
-        </svg>
-      </div>
-
-      {% if user.is_authenticated %}
-        <div class="svg-wrapper">
-          <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
-            <rect id="shape" height="40" width="150" />
-            <div id="text">
-              <input id="myRecommendBtn"type="submit" class="btn fw-bold" value="나만의 추천">
-            </div>
-          </svg>
+<br>
+<div class="buttons" align="center">
+    <div class="svg-wrapper">
+      <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+        <rect id="shape" height="40" width="150"/>
+        <div id="text">
+          <input id="averageBtn" type="submit" class="btn fw-bold" value="랭킹순">
         </div>
-      {% endif %}
-  </div>
+      </svg>
+    </div>
+
+    <div class="svg-wrapper">
+      <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+        <rect id="shape" height="40" width="150" />
+        <div id="text">
+          <input id="popularityBtn" type="submit" class="btn fw-bold" value="관람객 순">
+        </div>
+      </svg>
+    </div>
+
+    <div class="svg-wrapper">
+      <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+        <rect id="shape" height="40" width="150" />
+        <div id="text">
+          <input id="nowPlayingBtn"type="submit" class="btn fw-bold" value="현재 상영작">
+        </div>
+      </svg>
+    </div>
+
+    <div class="svg-wrapper">
+      <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+        <rect id="shape" height="40" width="150" />
+        <div id="text">
+          <input id="upComingBtn"type="submit" class="btn fw-bold" value="차기 상영작">
+        </div>
+      </svg>
+    </div>
+
+    {% if user.is_authenticated %}
+      <div class="svg-wrapper">
+        <svg height="40" width="150" xmlns="http://www.w3.org/2000/svg">
+          <rect id="shape" height="40" width="150" />
+          <div id="text">
+            <input id="myRecommendBtn"type="submit" class="btn fw-bold" value="나만의 추천">
+          </div>
+        </svg>
+      </div>
+    {% endif %}
+</div>
 
   <hr class="mt-5">
 
@@ -110,6 +109,7 @@
 {% endblock content %}
 
 {% block script %}
+
 <script>
   const title = document.querySelector('#title')
   const averageBtn = document.querySelector('#averageBtn')

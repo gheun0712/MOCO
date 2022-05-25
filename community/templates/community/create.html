@@ -3,6 +3,11 @@
 {% block content %}
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap');
+    
+    #title {
+      font-family: 'Gothic A1', sans-serif;
+    }
 
     #submit {
       border-top-left-radius: 5px;
@@ -16,10 +21,11 @@
 
   </style>
 
-  <br>
-  <br>
+  <a class="d-flex justify-content-end mt-2" href="{% url 'community:index' %}">
+    <i class="bi bi-arrow-left-square" style="color: #50C785; font-size: 2rem;"></i>
+  </a>
   <div align="center">
-    <h1>NEW REVIEW</h1>
+    <h1 id="title" style="border-radius: 5px;padding: 0.6em 1em;background: #F1F1F3;">NEW REVIEW</h1>
     <br>
     <br>
     <form action="" method="POST">
@@ -36,5 +42,5 @@
     </form>
   </div>
   <hr class="mt-5">
-  <a href="{% url 'community:index' %}">[back]</a>
+
 {% endblock %}

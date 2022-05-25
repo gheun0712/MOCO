@@ -12,15 +12,17 @@
 
   </style>
 
-  <h1 id="title" class="mt-5 fw-bold text-center"><i class=" fa fa-solid fa-address-card">　[ {{ person.username }} ] 의 프로필</i></h1>
-  <hr class="mt-5">
+  <h1 id="title" class="mt-5 fw-bold text-center" style="background: linear-gradient(to right, #ffa7a3, #5673bd); padding: 0.43em 2em; border-radius: 3px; color: #ffffff;">
+    <i class="fa fa-solid fa-address-card">　[ {{ person.username }} ] 의 마이페이지</i>
+  </h1>
+  {% comment %} <hr class="mt-5"> {% endcomment %}
 
   <p class="mt-5" align="center">
-    <button class="btn btn-primary mb-5" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">전체 보기</button>
+    <button class="btn text-white fw-bold mb-5" style="background-color: #4dccc6;" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">전체 보기</button>
     <br>
-    <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">좋아요 한 영화</a>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">작성한 글</button>
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">작성한 댓글</button>
+    <a class="btn text-white fw-bold" style="background: rgb(0,172,238); background: linear-gradient(0deg, rgba(0,172,238,1) 0%, rgba(2,126,251,1) 100%);" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">좋아요 한 영화</a>
+    <button class="btn text-white fw-bold" style="background: rgb(0,172,238); background: linear-gradient(0deg, rgba(0,172,238,1) 0%, rgba(2,126,251,1) 100%);" data-bs-toggle="collapse" href="#multiCollapseExample1" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">작성한 글</button>
+    <button class="btn text-white fw-bold" style="background: rgb(0,172,238); background: linear-gradient(0deg, rgba(0,172,238,1) 0%, rgba(2,126,251,1) 100%);" data-bs-toggle="collapse" href="#multiCollapseExample1" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">작성한 댓글</button>
   </p>
   <div class="row">
     <div class="col">
@@ -60,5 +62,4 @@
       </div>
     </div>
   </div>
-
 {% endblock %}

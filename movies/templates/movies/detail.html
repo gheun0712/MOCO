@@ -37,7 +37,10 @@
 </style>
 
   <div class="container">
-    <div class="card mt-5 mb-3 row g-0" >
+    <a class="d-flex justify-content-end mt-2" href="javascript:history.back()">
+      <i class="bi bi-arrow-left-square" style="color: #50C785; font-size: 2rem;"></i>
+    </a>
+    <div class="card mt-5 mb-3" >
       <div class="row g-0">
         <div class="col-md-4">
           <img src="{{ movie.poster_path }}" class="img-fluid rounded-start" alt="poster">
@@ -74,9 +77,10 @@
       {% if request.user.is_authenticated %}
         <div class="container">
         <form id="create_comment" action="{% url 'movies:create_comment' movie.pk %}" method="POST">
-          {% csrf_token %}
-          {{ comment_form.as_p}}
-          <input class="btn btn-outline-success" type="submit">
+          {% csrf_token %} 
+          <p id="commnetbody" style="font-size: 18px;">⭐ Rating: {{ comment_form.rating }}</p>
+          <span id="commnetbody" style="font-size: 18px;">✏ Content: {{ comment_form.content }}</span>
+          <input class="btn btn-outline-success btn-sm mx-3" type="submit">
         </form>
         </div>
       {% endif %}

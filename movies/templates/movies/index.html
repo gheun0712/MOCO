@@ -110,9 +110,14 @@
   }
 
   .btn-hover.color-1 {
-      background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
-      box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+    background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+    box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
   }
+
+  .btn-hover.color-2 {
+    background-image: linear-gradient(to right, #ed6ea0, #ec8c69, #f7186a , #FBB03B);
+    box-shadow: 0 4px 15px 0 rgba(236, 116, 149, 0.75);
+}
 
 </style>
   <br>
@@ -152,7 +157,13 @@
           {% endif %}
         </div>
         <br>
-        <h5 class="card-title" id="cardtitle" style="background: linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ movie.title }}</h5>
+        <h5 class="card-title" id="cardtitle" 
+        style="
+        background: linear-gradient(to right, #A7A3FF,#FFA7A3, #671cc4, #5673bd); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent;">
+        {{ movie.title }}</h5>
+
         {% if movie.title|length < 15 %}
           <br>
         {% endif %}
@@ -167,7 +178,7 @@
         <div class="buttons justify-content-between">
           <a href="{% url 'movies:detail' movie.pk %}" class="btn-hover color-1">Detail</a>
           {% if user.is_superuser %}
-            <a id="deleteBtn" href="#" class="btn-hover color-1 {{movie.pk}}">DELETE</a>
+            <a id="deleteBtn" href="#" class="btn-hover color-2 {{movie.pk}}">DELETE</a>
           {% endif %}
         </div>
       </div>

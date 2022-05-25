@@ -1,10 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>회원가입</h1>
-<form action="" method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit">
-</form>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gothic+A1&family=Poor+Story&display=swap');
+
+  #body{
+    font-family: 'Gothic A1', sans-serif;
+  }
+
+  #signup{
+    background: #efefef;
+    box-shadow: rgba(0,0,0,0.1);
+  }
+  
+</style>
+
+<br>
+<br>
+<h1 id="body" class="text-center fw-bold">📃Sign up</h1>
+<br>
+<div id="signup" class="mt-3 border border-secondary">
+  <div class="mx-5 px-5">
+    <br><br>
+    <form action="" method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <br><br>
+      <div align="center">
+        <input type="submit" class="w-35 btn btn-warning mt-2" value="SIGN UP">
+      </div>
+    </form>
+    <br>
+    <br>
+  </div>
+</div>
+
 {% endblock  %}

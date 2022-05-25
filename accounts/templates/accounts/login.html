@@ -1,10 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>로그인</h1>
-<form action="" method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit">
-</form>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gothic+A1&family=Poor+Story&display=swap');
+
+  #body{
+    font-family: 'Gothic A1', sans-serif;
+  }
+
+  #login {
+    background: #efefef;
+    box-shadow: rgba(0,0,0,0.1);
+  }
+</style>
+
+<br>
+<div align="center" class="mt-2">
+<div id="login" align="center" class="border border-secondary text-center" style="max-width: 350px;">
+  <br>
+  <br>
+  <form action="" method="POST">
+    {% csrf_token %}
+    <p id="body" class="mb-5 fw-bold" id="login" style="font-size: 30px;">🔐LOGIN</p>
+    <p id="body"><i class="fa fa-regular fa-user"></i>　Username</p>
+    {{ form.username }}
+    <br>
+    <br>
+    <p id="body"><i class="fa fa-regular fa-key"></i>　Password</p>
+    {{ form.password }}
+    <br>
+    <br>
+    <input type="submit" class="w-35 btn btn-outline-success mt-2" value="LOGIN">
+    <br>
+    <br>
+    <br>
+  </form>
+</div>
+</div>
+
 {% endblock  %}

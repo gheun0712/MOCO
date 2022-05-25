@@ -42,7 +42,7 @@ class ReviewCommentForm(forms.ModelForm):
         widgets = {
             'content' : forms.Textarea(attrs={
                 'class': "form-control",
-                'style': 'max-height: 50px; max-width: 400px;',
-                'placeholder': '내용을 입력해주세요.',
+                'style': 'max-height: 30px; max-width: 1000px;',
+                'placeholder': '✏ 댓글 내용을 입력해주세요.',
             })
         }

@@ -4,8 +4,8 @@ from django.conf import settings
 
 class Review(models.Model):
     title = models.CharField(max_length=100)
-    movie_title = models.CharField(max_length=50, blank=True, null=True)
-    rank = models.IntegerField(blank=True, null=True)
+    movie_title = models.CharField(max_length=50)
+    rank = models.IntegerField()
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

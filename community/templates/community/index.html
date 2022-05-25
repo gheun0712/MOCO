@@ -7,12 +7,20 @@
   
   #title {
     font-family: 'Do Hyeon', sans-serif;
-    font-size: 25px;
   }
   @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@600&display=swap');
 
   #list {
     font-family: 'Gothic A1', sans-serif;
+  }
+
+  #review {
+    text-decoration: none; 
+    border: rgba(75, 112, 253, 0.3) solid; 
+    border-width: 0 0 6px 0;
+    color: pink;
+    text-shadow: 0 0 30px;
+    font-size: 35px;
   }
 
 </style>
@@ -32,8 +40,10 @@
       <hr class="mb-5">
     {% endfor %} {% endcomment %}
 
+  <a id="review" href="{% url 'community:create'%}" class="nav-link link-dark px-2 fw-bold" align="right">NEW REVIEW</a>
+  <br>
   <table class="table table table-striped text-center" id="list">
-    <thead >
+    <thead>
       <tr class="table-primary text-white fw-bold"> 
         <th scope="col">제목</th>
         <th scope="col">영화제목</th>
@@ -86,5 +96,6 @@
     </ul>
   </nav>
   </div>
+  
 {% endblock %}
 

@@ -1,12 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="text-center">CREATE</h1>
-  <form action="" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit">
-  </form>
-  <hr>
+
+  <style>
+
+    #submit {
+      border-top-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      width: 200px;
+      height: 50px;
+      border: 1px solid skyblue;
+      background-color: skyblue;
+      color: white;
+    }
+
+  </style>
+
+  <br>
+  <br>
+  <div align="center">
+    <h1>NEW REVIEW</h1>
+    <br>
+    <br>
+    <form action="" method="POST">
+      {% csrf_token %}
+      {{ form.title }}
+      <br>
+      {{ form.movie_title }}
+      <br>
+      {{ form.rank }}
+      <br>
+      {{ form.content }}
+      <br>
+      <input id="submit" type="submit" value="업로드하기" class="fw-bold">
+    </form>
+  </div>
+  <hr class="mt-5">
   <a href="{% url 'community:index' %}">[back]</a>
 {% endblock %}

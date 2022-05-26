@@ -7,6 +7,7 @@ from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import MovieSerialzier
+from django.contrib.auth.decorators import login_required
 import requests
 import json
 # Create your views here.
@@ -94,6 +95,7 @@ def delete_comment(request,movie_pk, comment_pk):
     return redirect('movies:detail', movie.pk)
 
 
+@login_required
 def like(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     user = request.user
@@ -175,7 +177,7 @@ def recommended_upcoming(request):
     responses = requests.get(URL_Base+path, params=params).json()
     return Response(responses)
 
-
+@login_required
 @api_view(['GET'])
 def recommended_my(request, genre_id):
     genre = Genre.objects.get(id=genre_id)

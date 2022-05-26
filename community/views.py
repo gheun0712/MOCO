@@ -4,6 +4,7 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 from .models import Review, ReviewComment
 from .forms import ReviewForm, ReviewCommentForm
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 @require_GET
 def index(request):
@@ -13,7 +14,7 @@ def index(request):
     }
     return render(request, 'community/index.html', context)
 
-
+@login_required
 @require_http_methods(['GET', 'POST'])
 def create(request):
     if request.method == 'POST':
@@ -30,6 +31,8 @@ def create(request):
     }
     return render(request, 'community/create.html', context)
 
+
+@login_required
 @require_http_methods(['GET', 'POST'])
 def update(request, review_pk):
     review = Review.objects.get(pk=review_pk)

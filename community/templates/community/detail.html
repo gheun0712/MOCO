@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load bootstrap5 %}
 {% block content %}
 
 <style>
@@ -21,8 +21,8 @@
     font-size: 20px;
   
   }
-
 </style>
+
   <br>
   <a class="d-flex justify-content-end" href="{% url 'community:index' %}">
     <i class="bi bi-arrow-left-square" style="color: #50C785; font-size: 2rem;"></i>
@@ -56,9 +56,9 @@
       <br>
       <br>
       <p>{{ review.like_users.all|length }} 명이 이 글을 추천합니다.</p>
-
     </form>
   </div>
+
   <div align="right">
     {% if request.user == review.user %}
       <form action="{% url 'community:update' review.pk %}" method="POST" style="display: inline">
@@ -70,7 +70,6 @@
         <input type="submit" class="btn btn-outline-danger mt-3" value="삭제">
       </form>
     {% endif %}
-
   </div>
   <br>
   <hr>

@@ -1,7 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
-# Create your models here.
+
+
 class Genre(models.Model):
     name = models.CharField(max_length=50)
 

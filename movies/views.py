@@ -10,7 +10,8 @@ from .serializers import MovieSerialzier
 from django.contrib.auth.decorators import login_required
 import requests
 import json
-# Create your views here.
+
+
 @require_safe
 def index(request):
     movies = Movie.objects.order_by('-popularity')
@@ -176,6 +177,7 @@ def recommended_upcoming(request):
         }
     responses = requests.get(URL_Base+path, params=params).json()
     return Response(responses)
+
 
 @login_required
 @api_view(['GET'])

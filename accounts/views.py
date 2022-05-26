@@ -9,6 +9,7 @@ from .forms import CustomUserCreationForm
 from movies.models import Movie
 from community.models import Review, ReviewComment
 
+
 @require_http_methods(['GET', 'POST'])
 def signup(request):
     if request.user.is_authenticated:

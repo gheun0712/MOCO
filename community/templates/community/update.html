@@ -1,25 +1,24 @@
 {% extends 'base.html' %}
-
+{% load bootstrap5 %}
 {% block content %}
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap');
-    
-    #title {
-      font-family: 'Gothic A1', sans-serif;
-    }
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap');
+  
+  #title {
+    font-family: 'Gothic A1', sans-serif;
+  }
 
-    #submit {
-      border-top-left-radius: 5px;
-      border-bottom-right-radius: 5px;
-      width: 200px;
-      height: 50px;
-      border: 1px solid skyblue;
-      background-color: skyblue;
-      color: white;
-    }
-
-  </style>
+  #submit {
+    border-top-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    width: 200px;
+    height: 50px;
+    border: 1px solid skyblue;
+    background-color: skyblue;
+    color: white;
+  }
+</style>
 
   <a class="d-flex justify-content-end mt-2" href="{% url 'community:index' %}">
     <i class="bi bi-arrow-left-square" style="color: #50C785; font-size: 2rem;"></i>

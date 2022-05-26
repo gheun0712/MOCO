@@ -6,6 +6,7 @@ from .forms import ReviewForm, ReviewCommentForm
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
+
 @require_GET
 def index(request):
     reviews = Review.objects.order_by('-pk')
@@ -13,6 +14,7 @@ def index(request):
         'reviews': reviews,
     }
     return render(request, 'community/index.html', context)
+
 
 @login_required
 @require_http_methods(['GET', 'POST'])

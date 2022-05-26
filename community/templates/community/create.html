@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load bootstrap5 %}
 {% block content %}
 
   <style>
@@ -18,7 +18,6 @@
       background-color: skyblue;
       color: white;
     }
-
   </style>
 
   <a class="d-flex justify-content-end mt-2" href="{% url 'community:index' %}">
